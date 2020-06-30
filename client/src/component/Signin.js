@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 function Signin() {
   return (
     <section>
@@ -23,7 +23,9 @@ function Signin() {
               Login
             </button>
           </div>
-          <div className="form-footer">Don't have an account? Sign Up</div>
+          <div className="form-footer">
+            Don't have an account?<Link to="/register">Sign Up</Link>
+          </div>
         </form>
       </div>
     </section>
