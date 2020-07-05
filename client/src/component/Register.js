@@ -6,6 +6,9 @@ function Register(props) {
     email: "",
     password: "",
   });
+  function onchange(val) {
+    console.log("val:::", val.value, val.name);
+  }
   console.log("userdetail", userdetail);
   return (
     <section>
@@ -20,9 +23,7 @@ function Register(props) {
               name="name"
               className="form-input"
               placeholder="Name"
-              onChange={(e) =>
-                setUserDetail({ ...userdetail, name: e.target.value.trim() })
-              }
+              onChange={(e) => onchange(e.target)}
             />
             <span>{userdetail.name ? "Name Required field" : ""}</span>
           </div>
@@ -32,9 +33,7 @@ function Register(props) {
               name="email"
               className="form-input"
               placeholder="Email"
-              onChange={(e) =>
-                setUserDetail({ ...userdetail, email: e.target.value.trim() })
-              }
+              onChange={(e) => onchange(e.target)}
             />
           </div>
           <div className="form-group">
@@ -43,12 +42,7 @@ function Register(props) {
               name="password"
               className="form-input"
               placeholder="Password"
-              onChange={(e) =>
-                setUserDetail({
-                  ...userdetail,
-                  password: e.target.value.trim(),
-                })
-              }
+              onChange={(e) => onchange(e.target)}
             />
           </div>
           <div className="form-group">
