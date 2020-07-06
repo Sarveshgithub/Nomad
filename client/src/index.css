@@ -9,6 +9,10 @@ header {
   display: flex;
   justify-content: space-between;
 }
+/* Error Css */
+.redColor {
+  color: red;
+}
 .footer {
   position: fixed;
   left: 0;
