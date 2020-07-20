@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { axios } from "axios";
+import axios from "axios";
 function Register(props) {
   const [user, setUser] = useState({
     name: "",
@@ -54,7 +54,9 @@ function Register(props) {
   }, [error]);
 
   const registerUser = () => {
-    axios.post("/api/users/register", user)
+    console.log("test::", user);
+    axios
+      .post("/api/users/register", user)
       .then((response) => {
         console.log(response);
       })
