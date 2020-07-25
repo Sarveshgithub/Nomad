@@ -62,7 +62,17 @@ function Register(props) {
       })
       .catch((error) => {
         console.log(error.response);
-        if (error.response) {
+        if (error) {
+          const {
+            response: {
+              data: { status, message },
+            },
+          } = error;
+          if(status == 'error'){
+            
+          }
+          console.log(status);
+          console.log(message);
         }
       });
     console.log("register user");
