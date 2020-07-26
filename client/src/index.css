@@ -83,3 +83,18 @@ body {
 .form-footer {
   text-align: center;
 }
+
+/* Profile component css */
+.p-container {
+  display: flex;
+}
+
+.p-detail {
+  flex: 1;
+  border: 1px solid;
+}
+
+.p-about {
+  flex: 2;
+  border: 1px solid;
+}

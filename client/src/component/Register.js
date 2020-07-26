@@ -9,6 +9,7 @@ function Register(props) {
     cpass: "",
   });
   const [error, setError] = useState({});
+  const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onchange = (event) => {
     const { name, value } = event.target;
@@ -68,8 +69,8 @@ function Register(props) {
               data: { status, message },
             },
           } = error;
-          if(status == 'error'){
-            
+          if (status === "error") {
+            setServerError(message);
           }
           console.log(status);
           console.log(message);
@@ -83,6 +84,7 @@ function Register(props) {
         <form className="login-form" onSubmit={submitHandler} noValidate>
           <div className="form-header">
             <h3>Sign Up</h3>
+            {serverError && <p className="redColor">{serverError}</p>}
           </div>
           <div className="form-group">
             <input
