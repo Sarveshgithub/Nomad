@@ -1,51 +1,20 @@
 const express = require("express");
-const User = require("../models/userModel");
+const jsforce = require("jsforce");
 const router = express.Router();
 
-router.post("/signin", async (req, res) => {
-  const signinUser = await User.findOne({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  if (signinUser) {
-  } else {
-    res.status(401).send({ message: "Invalid Email or Password." });
+router.post("/login", async (req, res) => {
+  try {
+    console.log("response:::", req.body);
+    const { userName, password, token } = req.body;
+    const conn = new jsforce.Connection({
+      loginUrl: "https://login.salesforce.com",
+    });
+    const response = await conn.login(userName, password + token);
+    response["accessToken"] = conn.accessToken;
+    response["instanceUrl"] = conn.instanceUrl;
+    res.send(response);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 });
-
-router.post("/register", async (req, res) => {
-  console.log("req::", req.body);
-  const user = await User.findOne({ email: req.body.email });
-  if (user) {
-    return res
-      .status(400)
-      .send({ status: "error", message: "That user already exisits!" });
-  } else {
-    try {
-      const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-      });
-      const newUser = await user.save();
-      if (newUser) {
-        res.send({
-          status: "success",
-          response: {
-            _id: newUser.id,
-            name: newUser.name,
-            email: newUser.email,
-          },
-        });
-      } else {
-        res
-          .status(401)
-          .send({ status: "error", message: "Invalid User Data." });
-      }
-    } catch (error) {
-      res.send({ message: error.message });
-    }
-  }
-});
-
 module.exports = router;
