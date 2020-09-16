@@ -4,6 +4,7 @@ import Signin from "./component/Signin";
 import Header from "./component/Header";
 import Register from "./component/Register";
 import Profile from "./component/Profile";
+import Home from "./component/Home";
 function App() {
   return (
     <div>
@@ -13,6 +14,7 @@ function App() {
           <Route path="/signin" component={Signin} />
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />
+          <Route path="/home" component={Home} />
         </BrowserRouter>
       </main>
     </div>

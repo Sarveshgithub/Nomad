@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Redirect } from "react-router";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
-function Signin() {
+function Signin(props) {
   const [user, setUser] = useState({
-    userName: "",
-    password: "",
-    secToken: "",
-    orgType: "",
+    userName: "sarvesh.kumar@sfdx.com",
+    password: "Apple@123",
+    secToken: "6LnwuvlLTfrE5gnaEe5UYK6PJ",
+    orgType: "https://login.salesforce.com",
   });
   const [error, setError] = useState({});
   const [serverError, setServerError] = useState("");
@@ -50,17 +52,19 @@ function Signin() {
       .post("/api/user/login", user)
       .then((response) => {
         console.log(response);
+       // let history = useHistory();
+        props.history.push("/home", { ...response });
       })
       .catch((error) => {
-        console.log(error.response);
-        if (error) {
-          const {
-            response: {
-              data: { status, message },
-            },
-          } = error;
-          setServerError(message);
-        }
+        // console.log(error.response);
+        // if (error) {
+        //   const {
+        //     response: {
+        //       data: { status, message },
+        //     },
+        //   } = error;
+        //   setServerError(message);
+        // }
       });
   };
   return (
