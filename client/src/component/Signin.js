@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 function Signin(props) {
   const [user, setUser] = useState({
@@ -52,19 +51,21 @@ function Signin(props) {
       .post("/api/user/login", user)
       .then((response) => {
         console.log(response);
-       // let history = useHistory();
-        props.history.push("/home", { ...response });
+        props.history.push({
+          pathname: "/home",
+          data: response.data,
+        });
       })
       .catch((error) => {
-        // console.log(error.response);
-        // if (error) {
-        //   const {
-        //     response: {
-        //       data: { status, message },
-        //     },
-        //   } = error;
-        //   setServerError(message);
-        // }
+        console.log(error.response);
+        if (error) {
+          const {
+            response: {
+              data: { status, message },
+            },
+          } = error;
+          setServerError(message);
+        }
       });
   };
   return (
