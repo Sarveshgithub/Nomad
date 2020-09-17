@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import Signin from "./component/Signin";
 import Header from "./component/Header";
 import Register from "./component/Register";
@@ -12,6 +12,9 @@ function App() {
       <main>
         <BrowserRouter>
           <Route path="/signin" component={Signin} />
+          <Route exact path="/">
+            <Redirect to="/signin" />
+          </Route>
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />
           <Route path="/home" component={Home} />

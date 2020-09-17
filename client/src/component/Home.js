@@ -11,7 +11,7 @@ function Home(props) {
     if (data) {
       serverCall();
     } else {
-      props.history.push("/signin");
+      //props.history.push("/signin");
     }
   }, []);
   const serverCall = () => {
@@ -37,6 +37,20 @@ function Home(props) {
 
   return (
     <div>
+      <form noValidate>
+        <div>
+          <label>
+            Enter Object Api Names
+            <input type="text" name="userName" placeholder="UserName" />
+          </label>
+          <label>
+            Enter Field Api Name
+            <input type="text" name="userName" placeholder="UserName" />
+          </label>
+          <button type="submit">Search</button>
+        </div>
+      </form>
+
       <h1>Welcome home</h1>
       {perms &&
         perms.map((val) => (
