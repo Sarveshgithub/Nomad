@@ -34,18 +34,53 @@ function Home(props) {
         // }
       });
   };
-
+  const submitHandler = (event) => {
+    event.preventDefault();
+    console.log("event:::>>>>><<<<<<>>>>>>", event);
+  };
   return (
     <div>
-      <form noValidate>
-        <div>
+      <form onSubmit={submitHandler} noValidate>
+        <div style={{ display: "flex" }}>
           <label>
-            Enter Object Api Names
-            <input type="text" name="userName" placeholder="UserName" />
+            Object Api Names
+            <input
+              type="text"
+              name="objName"
+              placeholder="Enter comma seprated object name"
+            />
           </label>
           <label>
-            Enter Field Api Name
-            <input type="text" name="userName" placeholder="UserName" />
+            Field Api Names
+            <input
+              type="text"
+              name="fieldName"
+              placeholder="Enter comma seprated field name"
+            />
+          </label>
+          <label>
+            Permission set Names
+            <input
+              type="text"
+              name="permName"
+              placeholder="Enter comma seprated permission name"
+            />
+          </label>
+          <label>
+            Profile Names
+            <input
+              type="text"
+              name="proName"
+              placeholder="Enter comma seprated object name"
+            />
+          </label>
+          <label>
+            User Id
+            <input
+              type="text"
+              name="userId"
+              placeholder="Enter salesforce user id"
+            />
           </label>
           <button type="submit">Search</button>
         </div>
