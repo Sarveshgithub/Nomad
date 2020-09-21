@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { postCall } from "./util";
 function Home(props) {
   const [perms, setPerms] = useState();
   console.log("props::", props);
@@ -9,31 +9,15 @@ function Home(props) {
   console.log("custom data", data);
   useEffect(() => {
     if (data) {
-      serverCall();
+      const response = postCall("/api/user/accounts", data);
+      if (response.status == "success") {
+        setPerms(response.data);
+      }
     } else {
       //props.history.push("/signin");
     }
   }, []);
-  const serverCall = () => {
-    axios
-      .post("/api/user/accounts", data)
-      .then((response) => {
-        console.log("permession data::", response);
-        setPerms(response.data);
-        console.log("perms::", perms);
-      })
-      .catch((error) => {
-        console.log(error.response);
-        // if (error) {
-        //   const {
-        //     response: {
-        //       data: { status, message },
-        //     },
-        //   } = error;
-        //   // setServerError(message);
-        // }
-      });
-  };
+
   const submitHandler = (event) => {
     event.preventDefault();
     console.log("event:::>>>>><<<<<<>>>>>>", event);
