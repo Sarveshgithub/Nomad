@@ -1,26 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { postCall } from "./util";
 function Home(props) {
-  const [perms, setPerms] = useState();
-  console.log("props::", props);
   const {
     location: { data },
   } = props;
-  console.log("custom data", data);
-  useEffect(() => {
+  const [perms, setPerms] = useState();
+  const [filters, setFilters] = useState({
+    objApi: "",
+    fieldApi: "",
+    userId: "",
+    permName: "",
+    profileName: "",
+  });
+  useEffect(() => {}, []);
+  const onchange = (event) => {
+    const { name, value } = event.target;
+    setFilters({
+      ...filters,
+      [name]: value.replace(/\s+/g, "").split(","),
+    });
+  };
+  const submitHandler = (event) => {
+    event.preventDefault();
     if (data) {
-      const response = postCall("/api/user/accounts", data);
-      if (response.status == "success") {
-        setPerms(response.data);
-      }
+      const callback = (response) => {
+        console.log("callback response,:::", response);
+        if (response) {
+          setPerms(response.data);
+        }
+      };
+      postCall("/api/user/accounts", { ...filters, ...data }, callback);
     } else {
       //props.history.push("/signin");
     }
-  }, []);
-
-  const submitHandler = (event) => {
-    event.preventDefault();
-    console.log("event:::>>>>><<<<<<>>>>>>", event);
   };
   return (
     <div>
@@ -30,16 +42,20 @@ function Home(props) {
             Object Api Names
             <input
               type="text"
-              name="objName"
-              placeholder="Enter comma seprated object name"
+              name="objApi"
+              value={filters.objApi}
+              onChange={onchange}
+              placeholder="Account,Contact"
             />
           </label>
           <label>
             Field Api Names
             <input
               type="text"
-              name="fieldName"
-              placeholder="Enter comma seprated field name"
+              name="fieldApi"
+              value={filters.fieldApi}
+              onChange={onchange}
+              placeholder="Contact.Name,Contact.Email"
             />
           </label>
           <label>
@@ -47,6 +63,8 @@ function Home(props) {
             <input
               type="text"
               name="permName"
+              value={filters.permName}
+              onChange={onchange}
               placeholder="Enter comma seprated permission name"
             />
           </label>
@@ -54,8 +72,10 @@ function Home(props) {
             Profile Names
             <input
               type="text"
-              name="proName"
-              placeholder="Enter comma seprated object name"
+              name="profileName"
+              value={filters.profileName}
+              onChange={onchange}
+              placeholder="Enter comma seprated profile name"
             />
           </label>
           <label>
@@ -63,6 +83,8 @@ function Home(props) {
             <input
               type="text"
               name="userId"
+              value={filters.userId}
+              onChange={onchange}
               placeholder="Enter salesforce user id"
             />
           </label>
