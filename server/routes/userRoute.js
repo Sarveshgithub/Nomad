@@ -22,12 +22,37 @@ router.post("/login", async (req, res) => {
 router.post("/accounts", async (req, res) => {
   // if auth has not been set, redirect to index
   try {
-    const { accessToken, instanceUrl } = req.body;
-    const query =
-      "SELECT Id,SobjectType,Field,ParentId,PermissionsEdit,PermissionsRead,Parent.Name,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name FROM FieldPermissions WHERE  SobjectType IN  ('Contact') AND  Field IN  ('contact.Field1__c','contact.Field2__c','contact.Email')";
+    const {
+      accessToken,
+      instanceUrl,
+      objApi,
+      fieldApi,
+      permName,
+      profileName,
+    } = req.body;
+    const andCondition = [],
+      orCondition = [];
+    let query =
+      "SELECT Id,SobjectType,Field,ParentId,PermissionsEdit,PermissionsRead,Parent.Name,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name FROM FieldPermissions";
+    if (objApi) {
+      andCondition.push(`SobjectType IN  ${objApi}`);
+    }
+    if (fieldApi) {
+      andCondition.push(`Field IN  ${fieldApi}`);
+    }
+    if (permName) {
+      orCondition.push(`Parent.Name IN ${permName}`);
+    }
+    if (profileName) {
+      orCondition.push(`Parent.Profile.Name IN ${profileName}`);
+    }
+    query += ` WHERE ${andCondition.join(" AND ")}`;
+    query += orCondition.length > 0 ? ` AND (${orCondition.join(" OR ")})` : "";
+    console.log("query::", query);
+    // WHERE  SobjectType IN  ('Contact') AND  Field IN  ('contact.Field1__c','contact.Field2__c','contact.Email')";
     // open connection with client's stored OAuth details
-    const objPerm =
-      "SELECT Parent.Name,ParentId,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name,SobjectType,PermissionsRead,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsViewAllRecords,PermissionsModifyAllRecords FROM ObjectPermissions WHERE SobjectType IN  ('Contact')";
+    // const objPerm =
+    //   "SELECT Parent.Name,ParentId,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name,SobjectType,PermissionsRead,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsViewAllRecords,PermissionsModifyAllRecords FROM ObjectPermissions WHERE SobjectType IN  ('Contact')";
     const conn = new jsforce.Connection({
       accessToken: accessToken,
       instanceUrl: instanceUrl,

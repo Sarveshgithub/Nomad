@@ -6,8 +6,8 @@ function Home(props) {
   } = props;
   const [perms, setPerms] = useState();
   const [filters, setFilters] = useState({
-    objApi: "",
-    fieldApi: "",
+    objApi: "Contact",
+    fieldApi: "contact.Field1__c,contact.Field2__c",
     userId: "",
     permName: "",
     profileName: "",
@@ -17,11 +17,19 @@ function Home(props) {
     const { name, value } = event.target;
     setFilters({
       ...filters,
-      [name]: value.replace(/\s+/g, "").split(","),
+      [name]: value.replace(/\s+/g, ""),
     });
   };
   const submitHandler = (event) => {
     event.preventDefault();
+    console.log("filters:::", filters);
+    let { objApi, fieldApi, userId, permName, profileName } = filters;
+    objApi = objApi ? addQuotes(objApi) : "";
+    fieldApi = fieldApi ? addQuotes(fieldApi) : "";
+    userId = userId ? addQuotes(userId) : "";
+    permName = permName ? addQuotes(permName) : "";
+    profileName = profileName ? addQuotes(profileName) : "";
+    console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
     if (data) {
       const callback = (response) => {
         console.log("callback response,:::", response);
@@ -29,10 +37,23 @@ function Home(props) {
           setPerms(response.data);
         }
       };
-      postCall("/api/user/accounts", { ...filters, ...data }, callback);
+      postCall(
+        "/api/user/accounts",
+        { objApi, fieldApi, permName, profileName, ...data },
+        callback
+      );
     } else {
       //props.history.push("/signin");
     }
+  };
+
+  const addQuotes = (data) => {
+    data.split(",").forEach((element) => {
+      if (element) {
+        data = data.replace(element, `\'${element}\'`);
+      }
+    });
+    return `(${data})`;
   };
   return (
     <div>
