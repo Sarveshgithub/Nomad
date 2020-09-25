@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { postCall } from "./util";
+import Checkicon from "./Checkicon";
+import Crossicon from "./Crossicon";
 function Home(props) {
-  const {
+  let {
     location: { data },
   } = props;
+  data = {
+    accessToken:
+      "00D2w000003ytsa!ARMAQLEhejTcmYOJgTk1764M3bNzjxN9a.qMbSwI2o9cwMbzxUSPL0hPQyjTFUgaAUzvNxjl6ww1Rqqf7DfgCiiBkRKTGhRH",
+    id: "0052w000002VemNAAS",
+    instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
+    organizationId: "00D2w000003ytsaEAA",
+    url:
+      "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
+  };
   const [perms, setPerms] = useState();
   const [filters, setFilters] = useState({
     objApi: "Contact",
@@ -54,6 +65,21 @@ function Home(props) {
       }
     });
     return `(${data})`;
+  };
+
+  const toggle = (Id) => {
+    console.log("event", Id);
+    var element = document.getElementById(Id),
+      style = window.getComputedStyle(element),
+      display = style.getPropertyValue("display");
+    console.log("data::", display);
+    // setCss({ Id, css: { display: "none" } });
+    if (display == "none") {
+      document.getElementById(Id).style.display = "table";
+    } else {
+      document.getElementById(Id).style.display = "none";
+    }
+    //console.log("css::", document.getElementById("myElement").style);
   };
   return (
     <div>
@@ -112,15 +138,17 @@ function Home(props) {
           <button type="submit">Search</button>
         </div>
       </form>
-
       <h1>Welcome home</h1>
       {perms &&
         perms.map((val) => (
           <div key={val.Id}>
-            <a href={data.instanceUrl + "/" + val.Id} target="_blank">
-              {val.Name}
-            </a>
-            <table>
+            <h3>
+              <button onClick={() => toggle(val.Id)}>Search</button>
+              <a href={data.instanceUrl + "/" + val.Id} target="_blank">
+                {val.Name}
+              </a>
+            </h3>
+            <table id={val.Id} style={{ display: "none" }}>
               <thead>
                 <tr>
                   <th>SobjectType</th>
@@ -135,8 +163,12 @@ function Home(props) {
                     <tr key={field.Id}>
                       <td>{field.SobjectType}</td>
                       <td>{field.Field}</td>
-                      <td>{`${field.PermissionsEdit}`}</td>
-                      <td>{`${field.PermissionsRead}`}</td>
+                      <td>
+                        {field.PermissionsEdit ? <Checkicon /> : <Crossicon />}
+                      </td>
+                      <td>
+                        {field.PermissionsRead ? <Checkicon /> : <Crossicon />}
+                      </td>
                     </tr>
                   ))}
               </tbody>
