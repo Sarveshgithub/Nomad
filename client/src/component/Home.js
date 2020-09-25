@@ -8,7 +8,7 @@ function Home(props) {
   } = props;
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQLEhejTcmYOJgTk1764M3bNzjxN9a.qMbSwI2o9cwMbzxUSPL0hPQyjTFUgaAUzvNxjl6ww1Rqqf7DfgCiiBkRKTGhRH",
+      "00D2w000003ytsa!ARMAQF2dvyP46LcFuFbwNOHylSD4Pd5tmoZSsWZ60TuEd4LMcOCmATItTZjPuqqahw2pR.1laH3V2axv9LuUm.fp1lkuz4Lh",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -139,42 +139,54 @@ function Home(props) {
         </div>
       </form>
       <h1>Welcome home</h1>
-      {perms &&
-        perms.map((val) => (
-          <div key={val.Id}>
-            <h3>
-              <button onClick={() => toggle(val.Id)}>Search</button>
-              <a href={data.instanceUrl + "/" + val.Id} target="_blank">
-                {val.Name}
-              </a>
-            </h3>
-            <table id={val.Id} style={{ display: "none" }}>
-              <thead>
-                <tr>
-                  <th>SobjectType</th>
-                  <th>Field</th>
-                  <th>PermissionsEdit</th>
-                  <th>PermissionsRead</th>
-                </tr>
-              </thead>
-              <tbody>
-                {val.fieldPerms &&
-                  val.fieldPerms.map((field) => (
-                    <tr key={field.Id}>
-                      <td>{field.SobjectType}</td>
-                      <td>{field.Field}</td>
-                      <td>
-                        {field.PermissionsEdit ? <Checkicon /> : <Crossicon />}
-                      </td>
-                      <td>
-                        {field.PermissionsRead ? <Checkicon /> : <Crossicon />}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
+      <table>
+        <tbody>
+          <tr>
+            <td>SobjectType</td>
+            <td>Field</td>
+            <td>PermissionsEdit</td>
+            <td>PermissionsRead</td>
+          </tr>
+          {perms &&
+            perms.map((val) => (
+              <tr key={val.Id} className="altRow">
+                <td colSpan="4">
+                  <h3>
+                    <button onClick={() => toggle(val.Id)}>Search</button>
+                    <a href={data.instanceUrl + "/" + val.Id} target="_blank">
+                      {val.Name}
+                    </a>
+                  </h3>
+                  <table id={val.Id} style={{ display: "none" }}>
+                    <tbody>
+                      {val.fieldPerms &&
+                        val.fieldPerms.map((field) => (
+                          <tr key={field.Id}>
+                            <td>{field.SobjectType}</td>
+                            <td>{field.Field}</td>
+                            <td>
+                              {field.PermissionsEdit ? (
+                                <Checkicon />
+                              ) : (
+                                <Crossicon />
+                              )}
+                            </td>
+                            <td>
+                              {field.PermissionsRead ? (
+                                <Checkicon />
+                              ) : (
+                                <Crossicon />
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 }

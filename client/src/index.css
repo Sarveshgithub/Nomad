@@ -100,7 +100,7 @@ body {
 }
 
 /* Table Css */
-table {
+/* table {
   border-collapse: collapse;
 }
 
@@ -109,4 +109,20 @@ th {
   border: 1px solid #999;
   padding: 0.3rem;
   text-align: center;
+} */
+tr:nth-child(odd) {
+  background: #f1f1f1;
+}
+
+td {
+  padding: 1rem;
+}
+
+.altRow table {
+  width: 100%;
+}
+
+/* remove the padding for full width */
+.altRow > td {
+  padding: 0
 }
