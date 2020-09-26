@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { postCall } from "./util";
 import Checkicon from "./Checkicon";
 import Crossicon from "./Crossicon";
+import ChevronDownIcon from "./ChevronDownIcon";
+import ChevronRightIcon from "./ChevronRightIcon";
+
 function Home(props) {
   let {
     location: { data },
   } = props;
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQF2dvyP46LcFuFbwNOHylSD4Pd5tmoZSsWZ60TuEd4LMcOCmATItTZjPuqqahw2pR.1laH3V2axv9LuUm.fp1lkuz4Lh",
+      "00D2w000003ytsa!ARMAQPbJvhdRGbDRysLJyeW3IxwA9_w2RO1QInx.X1qPVx_HEPjSGqUffJQJsebDlrbYWgc0b4AHdVGPyHnsy2DbnpHOQION",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -16,6 +19,7 @@ function Home(props) {
       "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
   };
   const [perms, setPerms] = useState();
+  const [show, setTable] = useState({ id: "", show: false });
   const [filters, setFilters] = useState({
     objApi: "Contact",
     fieldApi: "contact.Field1__c,contact.Field2__c",
@@ -79,15 +83,21 @@ function Home(props) {
     } else {
       document.getElementById(Id).style.display = "none";
     }
+    if (show.id == Id && show.show) {
+      setTable({ id: "", show: false });
+    } else {
+      setTable({ id: Id, show: true });
+    }
+    console.log("show:::", show);
     //console.log("css::", document.getElementById("myElement").style);
   };
   return (
-    <div>
+    <div style={{ padding: "10px" }}>
       <form onSubmit={submitHandler} noValidate>
         <div style={{ display: "flex" }}>
           <label>
             Object Api Names
-            <input
+            <textarea
               type="text"
               name="objApi"
               value={filters.objApi}
@@ -97,7 +107,7 @@ function Home(props) {
           </label>
           <label>
             Field Api Names
-            <input
+            <textarea
               type="text"
               name="fieldApi"
               value={filters.fieldApi}
@@ -107,7 +117,7 @@ function Home(props) {
           </label>
           <label>
             Permission set Names
-            <input
+            <textarea
               type="text"
               name="permName"
               value={filters.permName}
@@ -117,7 +127,7 @@ function Home(props) {
           </label>
           <label>
             Profile Names
-            <input
+            <textarea
               type="text"
               name="profileName"
               value={filters.profileName}
@@ -127,7 +137,7 @@ function Home(props) {
           </label>
           <label>
             User Id
-            <input
+            <textarea
               type="text"
               name="userId"
               value={filters.userId}
@@ -152,7 +162,13 @@ function Home(props) {
               <tr key={val.Id} className="altRow">
                 <td colSpan="4">
                   <h3>
-                    <button onClick={() => toggle(val.Id)}>Search</button>
+                    <span onClick={() => toggle(val.Id)}>
+                      {show.id == val.Id && show.show ? (
+                        <ChevronDownIcon />
+                      ) : (
+                        <ChevronRightIcon />
+                      )}
+                    </span>
                     <a href={data.instanceUrl + "/" + val.Id} target="_blank">
                       {val.Name}
                     </a>
