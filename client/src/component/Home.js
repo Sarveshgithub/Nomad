@@ -11,14 +11,14 @@ function Home(props) {
   } = props;
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQPbJvhdRGbDRysLJyeW3IxwA9_w2RO1QInx.X1qPVx_HEPjSGqUffJQJsebDlrbYWgc0b4AHdVGPyHnsy2DbnpHOQION",
+      "00D2w000003ytsa!ARMAQD9LEWuQ5tB.JRO1OMK.Jdo6qEZmAtBTZrnFRq_9tlHabO_ZtajS.Dvf2aClL7sER2tXt28XM_ykjGAIiJs774qaPR1s",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
     url:
       "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
   };
-  const [perms, setPerms] = useState();
+  let [perms, setPerms] = useState([]);
   const [show, setTable] = useState({ id: "", show: false });
   const [filters, setFilters] = useState({
     objApi: "Contact",
@@ -70,25 +70,46 @@ function Home(props) {
     });
     return `(${data})`;
   };
-
+  // useEffect(() => {
+  //   // action on update of movies
+  //   setPerms(perms);
+  // }, [perms]);
   const toggle = (Id) => {
     console.log("event", Id);
-    var element = document.getElementById(Id),
-      style = window.getComputedStyle(element),
-      display = style.getPropertyValue("display");
-    console.log("data::", display);
-    // setCss({ Id, css: { display: "none" } });
-    if (display == "none") {
-      document.getElementById(Id).style.display = "table";
-    } else {
-      document.getElementById(Id).style.display = "none";
-    }
-    if (show.id == Id && show.show) {
-      setTable({ id: "", show: false });
-    } else {
-      setTable({ id: Id, show: true });
-    }
-    console.log("show:::", show);
+    // var element = document.getElementById(Id),
+    //   style = window.getComputedStyle(element),
+    //   display = style.getPropertyValue("display");
+    // console.log("data::", display);
+    // // setCss({ Id, css: { display: "none" } });
+    // if (display == "none") {
+    //   document.getElementById(Id).style.display = "table";
+    // } else {
+    //   document.getElementById(Id).style.display = "none";
+    // }
+    // if (show.id == Id && show.show) {
+    //   setTable({ id: "", show: false });
+    // } else {
+    //   setTable({ id: Id, show: true });
+    // }
+    perms.find((val) => {
+      if (Id === val.Id) {
+        val.show = !val.show;
+      }
+    });
+    let newData = perms;
+    // setPerms(newData);
+    setPerms((items) =>
+      //console.log("items::", items);
+      [
+        ...items,
+        items.find((val) => {
+          if (Id === val.Id) {
+            val.show = !val.show;
+          }
+        }),
+      ]
+    );
+    console.log("show:::", perms);
     //console.log("css::", document.getElementById("myElement").style);
   };
   return (
@@ -163,17 +184,17 @@ function Home(props) {
                 <td colSpan="4">
                   <h3>
                     <span onClick={() => toggle(val.Id)}>
-                      {show.id == val.Id && show.show ? (
-                        <ChevronDownIcon />
-                      ) : (
-                        <ChevronRightIcon />
-                      )}
+                      {`${val.show}`}
+                      {val.show ? <ChevronDownIcon /> : <ChevronRightIcon />}
                     </span>
                     <a href={data.instanceUrl + "/" + val.Id} target="_blank">
                       {val.Name}
                     </a>
                   </h3>
-                  <table id={val.Id} style={{ display: "none" }}>
+                  <table
+                    id={val.Id}
+                    style={val.show ? "" : { display: "none" }}
+                  >
                     <tbody>
                       {val.fieldPerms &&
                         val.fieldPerms.map((field) => (

@@ -70,7 +70,14 @@ router.post("/accounts", async (req, res) => {
           IsOwnedByProfile = a.Parent.IsOwnedByProfile,
           d =
             r.find(({ ParentId }) => ParentId === a.ParentId) ||
-            r.push({ Id, Name, ParentId, IsOwnedByProfile, fieldPerms: [a] });
+            r.push({
+              Id,
+              Name,
+              ParentId,
+              IsOwnedByProfile,
+              fieldPerms: [a],
+              show: false,
+            });
         if (d["fieldPerms"]) {
           d["fieldPerms"].push(a);
         }
