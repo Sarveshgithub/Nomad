@@ -11,14 +11,14 @@ function Home(props) {
   } = props;
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQD9LEWuQ5tB.JRO1OMK.Jdo6qEZmAtBTZrnFRq_9tlHabO_ZtajS.Dvf2aClL7sER2tXt28XM_ykjGAIiJs774qaPR1s",
+      "00D2w000003ytsa!ARMAQMAGw7IjoOoacQfN.TStZ_rX1xcoi6ddTfesbFbftmct.7s7jXjiG_1JPFQ2MB6esrSoQBRRID9lh3xvgNJ2qtXLsIlD",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
     url:
       "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
   };
-  let [perms, setPerms] = useState([]);
+  const [perms, setPerms] = useState([]);
   const [show, setTable] = useState({ id: "", show: false });
   const [filters, setFilters] = useState({
     objApi: "Contact",
@@ -91,24 +91,14 @@ function Home(props) {
     // } else {
     //   setTable({ id: Id, show: true });
     // }
-    perms.find((val) => {
-      if (Id === val.Id) {
-        val.show = !val.show;
-      }
-    });
-    let newData = perms;
-    // setPerms(newData);
-    setPerms((items) =>
-      //console.log("items::", items);
-      [
-        ...items,
-        items.find((val) => {
-          if (Id === val.Id) {
-            val.show = !val.show;
-          }
-        }),
-      ]
-    );
+    // perms.find((val) => {
+    //   if (Id === val.Id) {
+    //     val.show = !val.show;
+    //   }
+    // });
+    // let newData = perms;
+
+    setPerms(perms.map((item) => (item.Id === Id ? (item.show = true) : item)));
     console.log("show:::", perms);
     //console.log("css::", document.getElementById("myElement").style);
   };
