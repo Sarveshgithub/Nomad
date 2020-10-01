@@ -13,7 +13,7 @@ const postCall = (endPoint, body, callback) => {
       if (error) {
         const {
           response: {
-            data: { status, message },
+            data: { message },
           },
         } = error;
         return { status: "error", message };

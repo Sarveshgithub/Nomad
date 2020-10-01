@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
 function Signin(props) {
   const [user, setUser] = useState({
     userName: "sarvesh.kumar@sfdx.com",
-    password: "Apple@123",
-    secToken: "6LnwuvlLTfrE5gnaEe5UYK6PJ",
+    password: "Test@123",
+    secToken: "Tc3h1ugWjT9agONYCHfSPy9y",
     orgType: "https://login.salesforce.com",
   });
   const [error, setError] = useState({});
@@ -42,32 +41,29 @@ function Signin(props) {
   };
   useEffect(() => {
     if (Object.keys(error).length === 0 && isSubmitting) {
-      loginUser();
-    }
-  }, [error]);
-  const loginUser = () => {
-    console.log("test::", user);
-    axios
-      .post("/api/user/login", user)
-      .then((response) => {
-        console.log(response);
-        props.history.push({
-          pathname: "/home",
-          data: response.data,
+      console.log("test::", user);
+      axios
+        .post("/api/user/login", user)
+        .then((response) => {
+          console.log(response);
+          props.history.push({
+            pathname: "/home",
+            data: response.data,
+          });
+        })
+        .catch((error) => {
+          console.log(error.response);
+          if (error) {
+            const {
+              response: {
+                data: { message },
+              },
+            } = error;
+            setServerError(message);
+          }
         });
-      })
-      .catch((error) => {
-        console.log(error.response);
-        if (error) {
-          const {
-            response: {
-              data: { status, message },
-            },
-          } = error;
-          setServerError(message);
-        }
-      });
-  };
+    }
+  }, [error, isSubmitting]);
   return (
     <section>
       <div className="wrap">
