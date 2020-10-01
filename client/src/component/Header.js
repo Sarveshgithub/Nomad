@@ -11,7 +11,6 @@ function Header() {
       <div className="header-item">
         <li>About</li>
         <li>Sign in</li>
-        <li>Profile</li>
       </div>
     </header>
   );

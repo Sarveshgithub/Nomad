@@ -63,7 +63,8 @@ function Signin(props) {
           }
         });
     }
-  }, [error, isSubmitting]);
+    // eslint-disable-line react-hooks/exhaustive-deps
+  }, [error, isSubmitting, user, props.history]);
   return (
     <section>
       <div className="wrap">

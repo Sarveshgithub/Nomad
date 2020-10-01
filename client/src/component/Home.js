@@ -76,6 +76,7 @@ function Home(props) {
               name="objApi"
               value={filters.objApi}
               onChange={onchange}
+              style={{ width: "100%" }}
               placeholder="Account,Contact"
             />
           </label>
@@ -86,6 +87,7 @@ function Home(props) {
               name="fieldApi"
               value={filters.fieldApi}
               onChange={onchange}
+              style={{ width: "100%" }}
               placeholder="Contact.Name,Contact.Email"
             />
           </label>
@@ -96,6 +98,7 @@ function Home(props) {
               name="permName"
               value={filters.permName}
               onChange={onchange}
+              style={{ width: "100%" }}
               placeholder="Enter comma seprated permission name"
             />
           </label>
@@ -106,6 +109,7 @@ function Home(props) {
               name="profileName"
               value={filters.profileName}
               onChange={onchange}
+              style={{ width: "100%" }}
               placeholder="Enter comma seprated profile name"
             />
           </label>
@@ -116,19 +120,49 @@ function Home(props) {
               name="userId"
               value={filters.userId}
               onChange={onchange}
+              style={{ width: "100%" }}
               placeholder="Enter salesforce user id"
             />
           </label>
           <button type="submit">Search</button>
         </div>
       </form>
-      <h1>Welcome home</h1>
-      {perms.length > 0 && (
-        <Table
-          cols={["SobjectType", "Field", "PermissionsEdit", "PermissionsRead"]}
-          data={perms}
-        />
-      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          {perms.length > 0 && (
+            <Table
+              title={"Profiles"}
+              cols={[
+                "SobjectType",
+                "Field",
+                "PermissionsEdit",
+                "PermissionsRead",
+              ]}
+              data={perms}
+            />
+          )}
+        </div>
+        <div>
+          {perms.length > 0 && (
+            <Table
+              title={"Permession Sets"}
+              cols={[
+                "SobjectType",
+                "Field",
+                "PermissionsEdit",
+                "PermissionsRead",
+              ]}
+              data={perms}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
