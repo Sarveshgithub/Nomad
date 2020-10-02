@@ -60,6 +60,8 @@ router.post("/accounts", async (req, res) => {
 
     const response = await conn.query(query);
     //const response1 = await conn.query(objPerm);
+    const profile = [],
+      permSet = [];
     if (response.records) {
       const data = response.records.reduce((r, a) => {
         let Id = a.Parent.IsOwnedByProfile ? a.Parent.ProfileId : a.ParentId,
@@ -83,8 +85,13 @@ router.post("/accounts", async (req, res) => {
         }
         return r;
       }, []);
+      data.forEach((element) => {
+        element.IsOwnedByProfile
+          ? profile.push(element)
+          : permSet.push(element);
+      });
       console.log(data.length);
-      res.send(data);
+      res.send({ profile, permSet });
     } else {
       res.send("No Record Found");
     }

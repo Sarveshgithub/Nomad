@@ -7,14 +7,15 @@ function Home(props) {
   } = props;
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQH3.Umj2QJUV8b47rcFtAjayiZoN4ymkvSCKznxzMw4w9VW3BnVwCDkunkvfBu.sG35K3KGoB.eiAcBv3bVlclHGWY2B",
+      "00D2w000003ytsa!ARMAQIHRS34RC4ffNhp0Nhy.lDIQ4kkgC0ujJUzk52YhxS5mI3ISg2v21HyO8QeVeZTcXL80tZaRQnLuBVqVChvfdBdUWedi",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
     url:
       "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
   };
-  const [perms, setPerms] = useState([]);
+  const [permSet, setPerms] = useState([]);
+  const [profile, setProfile] = useState([]);
   const [filters, setFilters] = useState({
     objApi: "Contact",
     fieldApi: "contact.Field1__c,contact.Field2__c",
@@ -44,7 +45,13 @@ function Home(props) {
       const callback = (response) => {
         console.log("callback response,:::", response);
         if (response) {
-          setPerms(response.data);
+          const { permSet, profile } = response.data;
+          if (permSet) {
+            setPerms(permSet);
+          }
+          if (profile) {
+            setProfile(profile);
+          }
         }
       };
       postCall(
@@ -135,7 +142,7 @@ function Home(props) {
         }}
       >
         <div>
-          {perms.length > 0 && (
+          {profile.length > 0 && (
             <Table
               title={"Profiles"}
               cols={[
@@ -144,12 +151,13 @@ function Home(props) {
                 "PermissionsEdit",
                 "PermissionsRead",
               ]}
-              data={perms}
+              data={profile}
+              IsOwnedByProfile={true}
             />
           )}
         </div>
         <div>
-          {perms.length > 0 && (
+          {permSet.length > 0 && (
             <Table
               title={"Permession Sets"}
               cols={[
@@ -158,7 +166,8 @@ function Home(props) {
                 "PermissionsEdit",
                 "PermissionsRead",
               ]}
-              data={perms}
+              data={permSet}
+              IsOwnedByProfile={false}
             />
           )}
         </div>
