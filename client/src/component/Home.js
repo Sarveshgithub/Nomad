@@ -5,15 +5,19 @@ function Home(props) {
   let {
     location: { data },
   } = props;
-  data = {
-    accessToken:
-      "00D2w000003ytsa!ARMAQIHRS34RC4ffNhp0Nhy.lDIQ4kkgC0ujJUzk52YhxS5mI3ISg2v21HyO8QeVeZTcXL80tZaRQnLuBVqVChvfdBdUWedi",
-    id: "0052w000002VemNAAS",
-    instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
-    organizationId: "00D2w000003ytsaEAA",
-    url:
-      "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
-  };
+  if (!data) {
+    props.history.push("/signin");
+  }
+
+  // data = {
+  //   accessToken:
+  //     "00D2w000003ytsa!ARMAQIHRS34RC4ffNhp0Nhy.lDIQ4kkgC0ujJUzk52YhxS5mI3ISg2v21HyO8QeVeZTcXL80tZaRQnLuBVqVChvfdBdUWedi",
+  //   id: "0052w000002VemNAAS",
+  //   instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
+  //   organizationId: "00D2w000003ytsaEAA",
+  //   url:
+  //     "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
+  // };
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [filters, setFilters] = useState({
@@ -59,8 +63,6 @@ function Home(props) {
         { objApi, fieldApi, permName, profileName, ...data },
         callback
       );
-    } else {
-      //props.history.push("/signin");
     }
   };
 
