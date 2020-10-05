@@ -63,14 +63,38 @@ function Table({ cols, data, title }) {
                       {val["Name"]}
                     </a>
                   </h3>
+
                   <table
                     id={val.Id}
                     style={val.show ? "" : { display: "none" }}
                   >
                     <tbody>
+                      <tr>
+                        <td>Profile Permession</td>
+                      </tr>
+                      {val.objectPerms &&
+                        val.objectPerms.map((field) => (
+                          <tr key={field.Id}>
+                            <RenderRow
+                              data={field}
+                              keys={[
+                                "SobjectType",
+                                "PermissionsRead",
+                                "PermissionsCreate",
+                                "PermissionsEdit",
+                                "PermissionsDelete",
+                                "PermissionsModifyAllRecords",
+                                "PermissionsViewAllRecords",
+                              ]}
+                            />
+                          </tr>
+                        ))}
+                      <tr>
+                        <td>Field Permession</td>
+                      </tr>
                       {val.fieldPerms &&
                         val.fieldPerms.map((field) => (
-                          <tr key={field.Id}>
+                          <tr key={field.Id + "u"}>
                             <RenderRow data={field} keys={cols} />
                           </tr>
                         ))}

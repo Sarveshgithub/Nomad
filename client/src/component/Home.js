@@ -6,18 +6,18 @@ function Home(props) {
     location: { data },
   } = props;
   if (!data) {
-    props.history.push("/signin");
+    // props.history.push("/signin");
   }
 
-  // data = {
-  //   accessToken:
-  //     "00D2w000003ytsa!ARMAQIHRS34RC4ffNhp0Nhy.lDIQ4kkgC0ujJUzk52YhxS5mI3ISg2v21HyO8QeVeZTcXL80tZaRQnLuBVqVChvfdBdUWedi",
-  //   id: "0052w000002VemNAAS",
-  //   instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
-  //   organizationId: "00D2w000003ytsaEAA",
-  //   url:
-  //     "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
-  // };
+  data = {
+    accessToken:
+      "00D2w000003ytsa!ARMAQB8iuIdAMctP66Yha0QgVtIdSdJbCJDb7oXmANhOOmFqIXeEXqaBBysAqIwQ0wh54rdJHLVCt7Kn9_wjmp_agFeqaOM5",
+    id: "0052w000002VemNAAS",
+    instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
+    organizationId: "00D2w000003ytsaEAA",
+    url:
+      "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
+  };
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [filters, setFilters] = useState({
