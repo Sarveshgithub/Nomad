@@ -75,67 +75,70 @@ function Home(props) {
     return `(${data})`;
   };
   return (
-    <div style={{ padding: "10px" }}>
-      <form onSubmit={submitHandler} noValidate>
-        <div style={{ display: "flex" }}>
-          <label>
-            Object Api Names
-            <textarea
-              type="text"
-              name="objApi"
-              value={filters.objApi}
-              onChange={onchange}
-              style={{ width: "100%" }}
-              placeholder="Account,Contact"
-            />
-          </label>
-          <label>
-            Field Api Names
-            <textarea
-              type="text"
-              name="fieldApi"
-              value={filters.fieldApi}
-              onChange={onchange}
-              style={{ width: "100%" }}
-              placeholder="Contact.Name,Contact.Email"
-            />
-          </label>
-          <label>
-            Permission set Names
-            <textarea
-              type="text"
-              name="permName"
-              value={filters.permName}
-              onChange={onchange}
-              style={{ width: "100%" }}
-              placeholder="Enter comma seprated permission name"
-            />
-          </label>
-          <label>
-            Profile Names
-            <textarea
-              type="text"
-              name="profileName"
-              value={filters.profileName}
-              onChange={onchange}
-              style={{ width: "100%" }}
-              placeholder="Enter comma seprated profile name"
-            />
-          </label>
-          <label>
-            User Id
-            <textarea
-              type="text"
-              name="userId"
-              value={filters.userId}
-              onChange={onchange}
-              style={{ width: "100%" }}
-              placeholder="Enter salesforce user id"
-            />
-          </label>
-          <button type="submit">Search</button>
-        </div>
-      </form>
+    <div
+      style={{
+        padding: "10px",
+        display: "flex",
+        justifyContent: "space-around",
+      }}
+    >
+      <div style={{ flex: "0" }}>
+        <form onSubmit={submitHandler} noValidate>
+          <div>
+            <label>
+              Object Api Names
+              <textarea
+                type="text"
+                name="objApi"
+                value={filters.objApi}
+                onChange={onchange}
+                placeholder="Account,Contact"
+              />
+            </label>
+            <label>
+              Field Api Names
+              <textarea
+                type="text"
+                name="fieldApi"
+                value={filters.fieldApi}
+                onChange={onchange}
+                placeholder="Contact.Name,Contact.Email"
+              />
+            </label>
+            <label>
+              Permission set Names
+              <textarea
+                type="text"
+                name="permName"
+                value={filters.permName}
+                onChange={onchange}
+                placeholder="Enter comma seprated permission name"
+              />
+            </label>
+            <label>
+              Profile Names
+              <textarea
+                type="text"
+                name="profileName"
+                value={filters.profileName}
+                onChange={onchange}
+                placeholder="Enter comma seprated profile name"
+              />
+            </label>
+            <label>
+              User Id
+              <textarea
+                type="text"
+                name="userId"
+                value={filters.userId}
+                onChange={onchange}
+                placeholder="Enter salesforce user id"
+              />
+            </label>
+            <button type="submit">Search</button>
+          </div>
+        </form>
+      </div>
       <div
         style={{
           display: "flex",

@@ -27,6 +27,11 @@ function Table({ cols, data, title }) {
       style = window.getComputedStyle(element),
       display = style.getPropertyValue("display");
     console.log("display::", display);
+    // console.log(
+    //   "data::",
+    //   data.find(({ Id }) => Id === Id)
+    // );
+    // data.find(({ Id }) => Id === Id).show = true;
     if (display === "none") {
       document.getElementById(Id).style.display = "block";
     } else {
