@@ -6,7 +6,7 @@ import ChevronRightIcon from "./ChevronRightIcon";
 const RenderRow = (props) => {
   return props.keys.map((key, index) => {
     return (
-      <td key={`${props.data["Id"]}-${index}`}>
+      <td key={props.data["Id"] + index}>
         {typeof props.data[key] === "boolean" ? (
           props.data[key] ? (
             <Checkicon />
@@ -26,8 +26,9 @@ function Table({ cols, data, title }) {
     let element = document.getElementById(Id),
       style = window.getComputedStyle(element),
       display = style.getPropertyValue("display");
+    console.log("display::", display);
     if (display === "none") {
-      document.getElementById(Id).style.display = "table";
+      document.getElementById(Id).style.display = "block";
     } else {
       document.getElementById(Id).style.display = "none";
     }
@@ -35,76 +36,101 @@ function Table({ cols, data, title }) {
   return (
     <div>
       <h1>{title}</h1>
-      <table>
-        <tbody>
-          <tr>
-            {cols &&
-              cols.map((val) => {
-                return <th key={val}> {val} </th>;
-              })}
-          </tr>
-          {data &&
-            data.map((val) => (
-              <tr key={val.Id} className="altRow">
-                <td colSpan="4">
-                  <h3>
-                    <span onClick={() => toggle(val.Id)}>
-                      {val.show ? <ChevronDownIcon /> : <ChevronRightIcon />}
-                    </span>
-                    <a
-                      href={
-                        "https://sarvesh-sfdx-dev-ed.my.salesforce.com" +
-                        "/" +
-                        val.Id
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {val["Name"]}
-                    </a>
-                  </h3>
-
-                  <table
-                    id={val.Id}
-                    style={val.show ? "" : { display: "none" }}
-                  >
+      {data &&
+        data.map((val) => (
+          <div key={val.Id}>
+            <h3>
+              <span onClick={() => toggle(val.Id)}>
+                {val.show ? <ChevronDownIcon /> : <ChevronRightIcon />}
+              </span>
+              <a
+                href={
+                  "https://sarvesh-sfdx-dev-ed.my.salesforce.com" + "/" + val.Id
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {val["Name"]}
+              </a>
+            </h3>
+            <div
+              id={val.Id}
+              style={val.show ? "" : { display: "none", paddingLeft: "2em" }}
+            >
+              {val.objectPerms && (
+                <div>
+                  <p>
+                    <u>
+                      <b>Object Permession</b>
+                    </u>
+                  </p>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Object</th>
+                        <th>Read</th>
+                        <th>Create</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                        <th>ModifyAll</th>
+                        <th>ViewAll</th>
+                      </tr>
+                    </thead>
                     <tbody>
-                      <tr>
-                        <td>Profile Permession</td>
-                      </tr>
-                      {val.objectPerms &&
-                        val.objectPerms.map((field) => (
-                          <tr key={field.Id}>
-                            <RenderRow
-                              data={field}
-                              keys={[
-                                "SobjectType",
-                                "PermissionsRead",
-                                "PermissionsCreate",
-                                "PermissionsEdit",
-                                "PermissionsDelete",
-                                "PermissionsModifyAllRecords",
-                                "PermissionsViewAllRecords",
-                              ]}
-                            />
-                          </tr>
-                        ))}
-                      <tr>
-                        <td>Field Permession</td>
-                      </tr>
-                      {val.fieldPerms &&
-                        val.fieldPerms.map((field) => (
-                          <tr key={field.Id + "u"}>
-                            <RenderRow data={field} keys={cols} />
-                          </tr>
-                        ))}
+                      {val.objectPerms.map((field) => (
+                        <tr key={field.Id}>
+                          <RenderRow
+                            data={field}
+                            keys={[
+                              "SobjectType",
+                              "PermissionsRead",
+                              "PermissionsCreate",
+                              "PermissionsEdit",
+                              "PermissionsDelete",
+                              "PermissionsModifyAllRecords",
+                              "PermissionsViewAllRecords",
+                            ]}
+                            parentId={field.Id}
+                          />
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+                </div>
+              )}
+              {val.fieldPerms && (
+                <div>
+                  <p>
+                    <u>
+                      <b>Field Permession</b>
+                    </u>
+                  </p>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>SobjectType</th>
+                        <th>Field</th>
+                        <th>Edit</th>
+                        <th>Read</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {val.fieldPerms.map((field) => (
+                        <tr key={field.Id}>
+                          <RenderRow
+                            data={field}
+                            keys={cols}
+                            parentId={field.Id}
+                          />
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
     </div>
   );
 }

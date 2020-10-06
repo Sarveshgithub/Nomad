@@ -76,7 +76,7 @@ const objectSOQL = (req) => {
     orCondition = [];
   const { objApi, permName, profileName } = req;
   let query =
-    "SELECT Parent.Name,ParentId,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name,SobjectType,PermissionsRead,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsViewAllRecords,PermissionsModifyAllRecords FROM ObjectPermissions";
+    "SELECT Id,Parent.Name,ParentId,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name,SobjectType,PermissionsRead,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsViewAllRecords,PermissionsModifyAllRecords FROM ObjectPermissions";
   if (objApi) {
     andCondition.push(`SobjectType IN  ${objApi}`);
   }
@@ -105,13 +105,13 @@ const resData = (response) => {
           Name,
           ParentId,
           IsOwnedByProfile,
-          fieldPerms: a.hasOwnProperty("PermissionsCreate") ? [] : [a],
+          fieldPerms: !a.hasOwnProperty("PermissionsCreate") ? [a] : [],
           objectPerms: a.hasOwnProperty("PermissionsCreate") ? [a] : [],
           show: false,
         });
     if (d["fieldPerms"] && !a.hasOwnProperty("PermissionsCreate")) {
       d["fieldPerms"].push(a);
-    } else if (d["objectPerms"] && !a.hasOwnProperty("PermissionsCreate")) {
+    } else if (d["objectPerms"] && a.hasOwnProperty("PermissionsCreate")) {
       d["objectPerms"].push(a);
     }
     return r;
