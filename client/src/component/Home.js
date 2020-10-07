@@ -85,6 +85,19 @@ function Home(props) {
       <div style={{ width: "20%" }}>
         <form onSubmit={submitHandler} noValidate>
           <div style={{ display: "flex", flexDirection: "column" }}>
+            <div>
+              Select Options
+              <p>
+                <label>
+                  <input type="checkbox" name="sports[]" value="cycling" />
+                  {"Profile"}
+                </label>
+                <label>
+                  <input type="checkbox" name="sports[]" value="running" />
+                  {"Permession Set"}
+                </label>
+              </p>
+            </div>
             <label style={{ display: "flex", flexDirection: "column" }}>
               Object Api Names
               <textarea
@@ -135,6 +148,7 @@ function Home(props) {
                 placeholder="Enter salesforce user id"
               />
             </label>
+
             <button className="form-button" type="submit">
               Search
             </button>
