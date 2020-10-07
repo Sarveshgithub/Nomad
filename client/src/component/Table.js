@@ -62,7 +62,7 @@ function Table({ cols, data, title }) {
               id={val.Id}
               style={val.show ? "" : { display: "none", paddingLeft: "2em" }}
             >
-              {val.objectPerms && (
+              {val.objectPerms.length > 0 && (
                 <div>
                   <p>
                     <u>
@@ -103,7 +103,7 @@ function Table({ cols, data, title }) {
                   </table>
                 </div>
               )}
-              {val.fieldPerms && (
+              {val.fieldPerms.length > 0 && (
                 <div>
                   <p>
                     <u>

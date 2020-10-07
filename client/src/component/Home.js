@@ -11,7 +11,7 @@ function Home(props) {
 
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQO8jQMGuKNnR2mSVpp6gFbASDcnxVDTMSyPMG3Dx26XY8sOLMJ3vCmGPecoSDUIzlWmZAzecPt32QfwQkEQtRCGWZpvt",
+      "00D2w000003ytsa!ARMAQAvKm6G6QXtt_nODVvZIAoBQ1.oGAdy1gv9YMAS.pb2H3DD.nGWMC6lQkL5faUZtt6BB1.WfrEs4kioz7xEH24MktaKJ",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -82,10 +82,10 @@ function Home(props) {
         justifyContent: "space-around",
       }}
     >
-      <div style={{ flex: "0" }}>
+      <div style={{ width: "20%" }}>
         <form onSubmit={submitHandler} noValidate>
-          <div>
-            <label>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <label style={{ display: "flex", flexDirection: "column" }}>
               Object Api Names
               <textarea
                 type="text"
@@ -95,7 +95,7 @@ function Home(props) {
                 placeholder="Account,Contact"
               />
             </label>
-            <label>
+            <label style={{ display: "flex", flexDirection: "column" }}>
               Field Api Names
               <textarea
                 type="text"
@@ -105,7 +105,7 @@ function Home(props) {
                 placeholder="Contact.Name,Contact.Email"
               />
             </label>
-            <label>
+            <label style={{ display: "flex", flexDirection: "column" }}>
               Permission set Names
               <textarea
                 type="text"
@@ -115,7 +115,7 @@ function Home(props) {
                 placeholder="Enter comma seprated permission name"
               />
             </label>
-            <label>
+            <label style={{ display: "flex", flexDirection: "column" }}>
               Profile Names
               <textarea
                 type="text"
@@ -125,7 +125,7 @@ function Home(props) {
                 placeholder="Enter comma seprated profile name"
               />
             </label>
-            <label>
+            <label style={{ display: "flex", flexDirection: "column" }}>
               User Id
               <textarea
                 type="text"
@@ -135,18 +135,20 @@ function Home(props) {
                 placeholder="Enter salesforce user id"
               />
             </label>
-            <button type="submit">Search</button>
+            <button className="form-button" type="submit">
+              Search
+            </button>
           </div>
         </form>
       </div>
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
+          width: "80%",
+          paddingLeft: "3%",
         }}
       >
-        <div>
+        <div style={{ width: "50%" }}>
           {profile.length > 0 && (
             <Table
               title={"Profiles"}
@@ -161,7 +163,7 @@ function Home(props) {
             />
           )}
         </div>
-        <div>
+        <div style={{ width: "50%" }}>
           {permSet.length > 0 && (
             <Table
               title={"Permession Sets"}
