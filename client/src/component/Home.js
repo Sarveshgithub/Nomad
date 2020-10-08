@@ -11,7 +11,7 @@ function Home(props) {
 
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQAvKm6G6QXtt_nODVvZIAoBQ1.oGAdy1gv9YMAS.pb2H3DD.nGWMC6lQkL5faUZtt6BB1.WfrEs4kioz7xEH24MktaKJ",
+      "00D2w000003ytsa!ARMAQLLg.pdvuGdPaSz3gzLz79OhzvblbCXLbTgljAH3ndqlyBB8RT8vPfGh_EMvOO4I1KC4TJ4bGN..B5putlgJX4V8IDmR",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -26,22 +26,34 @@ function Home(props) {
     userId: "",
     permName: "",
     profileName: "",
+    isProfile: true,
+    isPerm: false,
   });
   useEffect(() => {}, []);
   const onchange = (event) => {
-    const { name, value } = event.target;
+    let { name, value, checked } = event.target;
+    console.log("data:::", name, value, checked);
+    if (checked !== undefined) {
+      value = checked;
+    }
     setFilters({
       ...filters,
-      [name]: value.replace(/\s+/g, ""),
+      [name]: value,
     });
   };
   const submitHandler = (event) => {
     event.preventDefault();
-    console.log("filters:::", filters);
-    let { objApi, fieldApi, userId, permName, profileName } = filters;
+    let {
+      objApi,
+      fieldApi,
+      userId,
+      permName,
+      profileName,
+      isProfile,
+      isPerm,
+    } = filters;
     objApi = objApi ? addQuotes(objApi) : "";
     fieldApi = fieldApi ? addQuotes(fieldApi) : "";
-    userId = userId ? addQuotes(userId) : "";
     permName = permName ? addQuotes(permName) : "";
     profileName = profileName ? addQuotes(profileName) : "";
     console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
@@ -60,7 +72,7 @@ function Home(props) {
       };
       postCall(
         "/api/user/accounts",
-        { objApi, fieldApi, permName, profileName, ...data },
+        { objApi, fieldApi, permName, profileName, isProfile, isPerm, ...data },
         callback
       );
     }
@@ -89,11 +101,21 @@ function Home(props) {
               Select Options
               <p>
                 <label>
-                  <input type="checkbox" name="sports[]" value="cycling" />
+                  <input
+                    type="checkbox"
+                    name="isProfile"
+                    checked={filters.isProfile}
+                    onChange={onchange}
+                  />
                   {"Profile"}
                 </label>
                 <label>
-                  <input type="checkbox" name="sports[]" value="running" />
+                  <input
+                    type="checkbox"
+                    name="isPerm"
+                    checked={filters.isPerm}
+                    onChange={onchange}
+                  />
                   {"Permession Set"}
                 </label>
               </p>
