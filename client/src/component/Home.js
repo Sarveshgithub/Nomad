@@ -11,7 +11,7 @@ function Home(props) {
 
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQLLg.pdvuGdPaSz3gzLz79OhzvblbCXLbTgljAH3ndqlyBB8RT8vPfGh_EMvOO4I1KC4TJ4bGN..B5putlgJX4V8IDmR",
+      "00D2w000003ytsa!ARMAQJMQ77gftsJkYdJt.FY_69I912rCcElOh_5pEuDe5YWjxtsnbLKC9AjKZjYSiyL2pL7bn76DWpp0CtSVHT.4HoD0_oLy",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -52,10 +52,11 @@ function Home(props) {
       isProfile,
       isPerm,
     } = filters;
-    objApi = objApi ? addQuotes(objApi) : "";
-    fieldApi = fieldApi ? addQuotes(fieldApi) : "";
-    permName = permName ? addQuotes(permName) : "";
-    profileName = profileName ? addQuotes(profileName) : "";
+    objApi = objApi ? `(${addQuotes(objApi)})` : "";
+    fieldApi = fieldApi ? `(${addQuotes(fieldApi)})` : "";
+    permName = permName ? `(${addQuotes(permName)})` : "";
+    profileName = profileName ? `(${addQuotes(profileName)})` : "";
+    userId = userId ? addQuotes(userId) : "";
     console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
     if (data) {
       const callback = (response) => {
@@ -84,7 +85,7 @@ function Home(props) {
         data = data.replace(element, `'${element}'`);
       }
     });
-    return `(${data})`;
+    return `${data}`;
   };
   return (
     <div

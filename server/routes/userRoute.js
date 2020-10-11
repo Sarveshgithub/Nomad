@@ -39,7 +39,7 @@ router.post("/accounts", async (req, res) => {
     }
     console.log("data:::", data);
     if (data) {
-      res.send(resData(data));
+      res.send(resData(data, req.body));
     } else {
       res.send("No Record Found");
     }
@@ -90,7 +90,8 @@ const objectSOQL = (req) => {
   query += orCondition.length > 0 ? ` AND (${orCondition.join(" OR ")})` : "";
   return query;
 };
-const resData = (response) => {
+const resData = (response, params) => {
+  const { isProfile, isPerm } = params;
   const profile = [],
     permSet = [];
   const data = response.reduce((r, a) => {
@@ -117,7 +118,9 @@ const resData = (response) => {
     return r;
   }, []);
   data.forEach((element) => {
-    element.IsOwnedByProfile ? profile.push(element) : permSet.push(element);
+    element.IsOwnedByProfile
+      ? isProfile && profile.push(element)
+      : isPerm && permSet.push(element);
   });
   console.log(data.length);
   return { profile, permSet };
