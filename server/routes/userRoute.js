@@ -29,8 +29,8 @@ router.post("/accounts", async (req, res) => {
       instanceUrl: instanceUrl,
     });
     const data = [];
-    const fieldData = await conn.query(fieldQuery);
-    const objectData = await conn.query(objectQuery);
+    const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
+    const objectData = objectQuery ? await conn.query(objectQuery) : "";
     if (fieldData.records) {
       data.push(...fieldData.records);
     }
@@ -60,6 +60,8 @@ const fieldSOQL = (req) => {
   }
   if (fieldApi) {
     andCondition.push(`Field IN  ${fieldApi}`);
+  } else {
+    return null;
   }
   if (permName) {
     orCondition.push(`Parent.Name IN ${permName}`);
@@ -79,6 +81,8 @@ const objectSOQL = (req) => {
     "SELECT Id,Parent.Name,ParentId,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name,SobjectType,PermissionsRead,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsViewAllRecords,PermissionsModifyAllRecords FROM ObjectPermissions";
   if (objApi) {
     andCondition.push(`SobjectType IN  ${objApi}`);
+  } else {
+    return null;
   }
   if (permName) {
     orCondition.push(`Parent.Name IN ${permName}`);
