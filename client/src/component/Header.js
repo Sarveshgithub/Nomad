@@ -5,12 +5,12 @@ function Header() {
     <header>
       <div>
         <h1>
-          <em>OYe</em>
+          <em>SFDC Perms</em>
         </h1>
       </div>
       <div className="header-item">
         <li>About</li>
-        <li>Sign in</li>
+        <li>Log out</li>
       </div>
     </header>
   );

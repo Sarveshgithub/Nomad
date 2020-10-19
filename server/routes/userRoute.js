@@ -19,18 +19,33 @@ router.post("/login", async (req, res) => {
 router.post("/accounts", async (req, res) => {
   // if auth has not been set, redirect to index
   try {
-    const { accessToken, instanceUrl } = req.body;
-    let fieldQuery = fieldSOQL(req.body),
-      objectQuery = objectSOQL(req.body);
-    console.log("query::", fieldQuery);
-    console.log("objectQuery:::", objectQuery);
+    const { accessToken, instanceUrl, userId } = req.body;
     const conn = new jsforce.Connection({
       accessToken: accessToken,
       instanceUrl: instanceUrl,
     });
+    console.log("req.body:::", req.body);
+    let assignedPerm = [];
+    if (userId) {
+      const permissionAssignment = `SELECT Id, PermissionSetId FROM PermissionSetAssignment WHERE AssigneeId = ${userId}`;
+      const assignedUserPerm = permissionAssignment
+        ? await conn.query(permissionAssignment)
+        : "";
+      if (assignedUserPerm.records) {
+        assignedUserPerm.records.forEach((val) => {
+          assignedPerm.push(`'${val.PermissionSetId}'`);
+        });
+      }
+    }
+    let fieldQuery = fieldSOQL({ ...req.body, assignedPerm }),
+      objectQuery = objectSOQL({ ...req.body, assignedPerm });
+    console.log("query::", fieldQuery);
+    console.log("objectQuery:::", objectQuery);
+
     const data = [];
     const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
     const objectData = objectQuery ? await conn.query(objectQuery) : "";
+
     if (fieldData.records) {
       data.push(...fieldData.records);
     }
@@ -52,9 +67,12 @@ router.post("/accounts", async (req, res) => {
 const fieldSOQL = (req) => {
   const andCondition = [],
     orCondition = [];
-  const { objApi, fieldApi, permName, profileName } = req;
+  const { objApi, fieldApi, permName, profileName, assignedPerm } = req;
   let query =
     "SELECT Id,SobjectType,Field,ParentId,PermissionsEdit,PermissionsRead,Parent.Name,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name FROM FieldPermissions";
+  if (assignedPerm.length > 0) {
+    andCondition.push(`ParentId IN (${assignedPerm})`);
+  }
   if (objApi) {
     andCondition.push(`SobjectType IN  ${objApi}`);
   }
@@ -76,9 +94,12 @@ const fieldSOQL = (req) => {
 const objectSOQL = (req) => {
   const andCondition = [],
     orCondition = [];
-  const { objApi, permName, profileName } = req;
+  const { objApi, permName, profileName, assignedPerm } = req;
   let query =
     "SELECT Id,Parent.Name,ParentId,Parent.IsOwnedByProfile,Parent.ProfileId,Parent.Profile.Name,SobjectType,PermissionsRead,PermissionsCreate,PermissionsDelete,PermissionsEdit,PermissionsViewAllRecords,PermissionsModifyAllRecords FROM ObjectPermissions";
+  if (assignedPerm.length > 0) {
+    andCondition.push(`ParentId IN (${assignedPerm})`);
+  }
   if (objApi) {
     andCondition.push(`SobjectType IN  ${objApi}`);
   } else {
