@@ -8,7 +8,6 @@ function Home(props) {
   if (!data) {
     // props.history.push("/signin");
   }
-
   data = {
     accessToken:
       "00D2w000003ytsa!ARMAQJKNsJFWgW1R87__cVbREW2IkUfX9xKJtm7yxQJfyo_v8UdQTfhXYrQHLH1cCzywbjNUGT9YBdKq5alPUh9GksjtyvD5",
@@ -22,6 +21,7 @@ function Home(props) {
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
     objApi: "Contact",
     fieldApi: "contact.Field1__c,contact.Field2__c",
@@ -33,7 +33,6 @@ function Home(props) {
   });
   const onchange = (event) => {
     let { name, value, checked } = event.target;
-    console.log("data:::", name, value, checked);
     if (checked !== undefined) {
       value = checked;
     }
@@ -57,7 +56,12 @@ function Home(props) {
     setError(validation());
     setIsSubmitting(true);
   };
-  const callApi = (event) => {
+  useEffect(() => {
+    if (Object.keys(error).length === 0 && isSubmitting) {
+      callApi();
+    }
+  }, [error, isSubmitting]);
+  const callApi = () => {
     let {
       objApi,
       fieldApi,
@@ -146,10 +150,8 @@ function Home(props) {
                   />
                   {"Permession Set"}
                 </label>
-                {error.typeError && (
-                  <p className="redColor">{error.typeError}</p>
-                )}
               </p>
+              {error.typeError && <p className="redColor">{error.typeError}</p>}
             </div>
             <label style={{ display: "flex", flexDirection: "column" }}>
               Object Api Names
