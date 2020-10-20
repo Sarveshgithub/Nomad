@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Checkicon from "./Checkicon";
 import Crossicon from "./Crossicon";
 import ChevronDownIcon from "./ChevronDownIcon";
@@ -22,6 +22,7 @@ const RenderRow = (props) => {
 };
 
 function Table({ cols, data, title }) {
+  const [open, setOpen] = useState([]);
   const toggle = (Id) => {
     let element = document.getElementById(Id),
       style = window.getComputedStyle(element),
@@ -33,8 +34,18 @@ function Table({ cols, data, title }) {
     // );
     // data.find(({ Id }) => Id === Id).show = true;
     if (display === "none") {
+      open.push(Id);
+      data.map((val) => {
+        val.show = val.Id == Id;
+      });
       document.getElementById(Id).style.display = "block";
     } else {
+      if (open.includes(Id)) {
+        open.splice(open.indexOf(Id), 1);
+      }
+      data.map((val) => {
+        val.show = !(val.Id == Id);
+      });
       document.getElementById(Id).style.display = "none";
     }
   };

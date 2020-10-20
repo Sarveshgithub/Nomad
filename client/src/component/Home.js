@@ -11,7 +11,7 @@ function Home(props) {
 
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQEO3jGtnAQIhyGik5M6vWTKF5i8yS6s_GgFL.PKgvUgFldKi43sDSwKo2aWsBsN6CPPFCtgYVCHTHrhfV3qz6Td1RO8r",
+      "00D2w000003ytsa!ARMAQJKNsJFWgW1R87__cVbREW2IkUfX9xKJtm7yxQJfyo_v8UdQTfhXYrQHLH1cCzywbjNUGT9YBdKq5alPUh9GksjtyvD5",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -21,6 +21,7 @@ function Home(props) {
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({});
   const [filters, setFilters] = useState({
     objApi: "Contact",
     fieldApi: "contact.Field1__c,contact.Field2__c",
@@ -30,7 +31,6 @@ function Home(props) {
     isProfile: true,
     isPerm: false,
   });
-  useEffect(() => {}, []);
   const onchange = (event) => {
     let { name, value, checked } = event.target;
     console.log("data:::", name, value, checked);
@@ -42,8 +42,22 @@ function Home(props) {
       [name]: value,
     });
   };
+  const validation = () => {
+    const tempErr = {};
+    if (!filters.isProfile && !filters.isPerm) {
+      tempErr["typeError"] = "Atlest select one permession type";
+    }
+    if (!filters.objApi && !filters.objApi) {
+      tempErr["apiError"] = "Atlest enter Object or Field Api Name";
+    }
+    return tempErr;
+  };
   const submitHandler = (event) => {
     event.preventDefault();
+    setError(validation());
+    setIsSubmitting(true);
+  };
+  const callApi = (event) => {
     let {
       objApi,
       fieldApi,
@@ -63,7 +77,6 @@ function Home(props) {
       const callback = (response) => {
         console.log("callback response,:::", response);
         if (response) {
-          //  setLoading(false);
           const { permSet, profile } = response.data;
           if (permSet) {
             setPerms(permSet);
@@ -73,7 +86,6 @@ function Home(props) {
           }
         }
       };
-      // setLoading(true);
       postCall(
         "/api/user/accounts",
         {
@@ -134,6 +146,9 @@ function Home(props) {
                   />
                   {"Permession Set"}
                 </label>
+                {error.typeError && (
+                  <p className="redColor">{error.typeError}</p>
+                )}
               </p>
             </div>
             <label style={{ display: "flex", flexDirection: "column" }}>
@@ -156,6 +171,7 @@ function Home(props) {
                 placeholder="Contact.Name,Contact.Email"
               />
             </label>
+            {error.apiError && <p className="redColor">{error.apiError}</p>}
             <label style={{ display: "flex", flexDirection: "column" }}>
               Permission set Names
               <textarea
