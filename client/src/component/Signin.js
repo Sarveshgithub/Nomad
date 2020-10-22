@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 function Signin(props) {
   const [user, setUser] = useState({
-    userName: "",
-    password: "",
-    secToken: "",
-    orgType: "",
+    userName: "sarvesh.kumar@sfdx.com",
+    password: "Test@123",
+    secToken: "Tc3h1ugWjT9agONYCHfSPy9y",
+    orgType: "https://login.salesforce.com",
   });
   const [error, setError] = useState({});
   const [serverError, setServerError] = useState("");
