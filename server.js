@@ -1,15 +1,15 @@
 const express = require("express");
-const { MONGODB_URL } = require("./config");
-const userRoute = require("./routes/userRoute");
+const { MONGODB_URL } = require("./server/config");
+const userRoute = require("./server/routes/userRoute");
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 app.use(bodyParser.json());
 app.use("/api/user", userRoute);
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("../client/build"));
+  app.use(express.static("client/build"));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
 
