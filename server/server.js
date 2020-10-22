@@ -6,7 +6,6 @@ const path = require("path");
 const app = express();
 app.use(bodyParser.json());
 app.use("/api/user", userRoute);
-app.use(express.static(path.join(__dirname, "../build")));
 if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/build"));
