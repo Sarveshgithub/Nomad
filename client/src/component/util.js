@@ -10,9 +10,9 @@ const postCall = (endPoint, body, callback) => {
       console.log(error.response);
       if (error) {
         const {
-          response: { statusText, status },
+          response: { data, status },
         } = error;
-        callback({ status, statusText });
+        callback({ status, data });
       }
     });
 };

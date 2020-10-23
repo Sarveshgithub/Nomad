@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Checkicon from "./Checkicon";
 import Crossicon from "./Crossicon";
 import ChevronDownIcon from "./ChevronDownIcon";
@@ -22,30 +22,13 @@ const RenderRow = (props) => {
 };
 
 function Table({ cols, data, title }) {
-  const [open, setOpen] = useState([]);
   const toggle = (Id) => {
     let element = document.getElementById(Id),
       style = window.getComputedStyle(element),
       display = style.getPropertyValue("display");
-    console.log("display::", display);
-    // console.log(
-    //   "data::",
-    //   data.find(({ Id }) => Id === Id)
-    // );
-    // data.find(({ Id }) => Id === Id).show = true;
     if (display === "none") {
-      open.push(Id);
-      data.map((val) => {
-        val.show = val.Id == Id;
-      });
       document.getElementById(Id).style.display = "block";
     } else {
-      if (open.includes(Id)) {
-        open.splice(open.indexOf(Id), 1);
-      }
-      data.map((val) => {
-        val.show = !(val.Id == Id);
-      });
       document.getElementById(Id).style.display = "none";
     }
   };
@@ -60,9 +43,7 @@ function Table({ cols, data, title }) {
                 {val.show ? <ChevronDownIcon /> : <ChevronRightIcon />}
               </span>
               <a
-                href={
-                  "https://sarvesh-sfdx-dev-ed.my.salesforce.com" + "/" + val.Id
-                }
+                href={"https://sarvesh-sfdx-dev-ed.my.salesforce.com/" + val.Id}
                 target="_blank"
                 rel="noopener noreferrer"
               >

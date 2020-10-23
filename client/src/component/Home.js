@@ -48,7 +48,7 @@ function Home(props) {
     if (!filters.isProfile && !filters.isPerm) {
       tempErr["typeError"] = "Atlest select one permession type";
     }
-    if (!filters.objApi && !filters.objApi) {
+    if (!filters.objApi && !filters.fieldApi) {
       tempErr["apiError"] = "Atlest enter Object or Field Api Name";
     }
     return tempErr;
@@ -63,7 +63,7 @@ function Home(props) {
       setLoading(true);
       callApi();
     }
-  }, [error, isSubmitting]);
+  }, [error, isSubmitting]); // eslint-disable-line react-hooks/exhaustive-deps
   const callApi = () => {
     let {
       objApi,
@@ -83,19 +83,23 @@ function Home(props) {
       console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
       const callback = (response) => {
         console.log("callback response,:::", response);
-        if (response.status === 200) {
-          const { permSet, profile } = response.data;
+        const { data, status } = response;
+        if (status === 200) {
+          const { permSet, profile } = data;
           if (permSet) {
             setPerms(permSet);
           }
           if (profile) {
             setProfile(profile);
           }
-          if (permSet.length == 0 && profile.length == 0) {
+          if (permSet.length === 0 && profile.length === 0) {
             setServerError("No records found");
           }
-        } else if (response.status === 500) {
-          setServerError(response.statusText);
+        } else if (status === 500) {
+          if (data.includes("Session expired or invalid")) {
+            props.history.push("/signin");
+          }
+          setServerError(data);
         }
         setLoading(false);
       };
