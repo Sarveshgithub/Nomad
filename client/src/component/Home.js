@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { postCall } from "./util";
 import Table from "./Table";
+import Loader from "./Loader";
 function Home(props) {
   let {
     location: { data },
   } = props;
   if (!data) {
-    props.history.push("/signin");
+    // props.history.push("/signin");
   }
   // data = {
   //   accessToken:
-  //     "00D2w000003ytsa!ARMAQGHyACPZ0gbBgakCcM3Ps_Zfhy2O8dGXfc65dATRlL2vd0YeEdT4AQ4fPo91MFAYhF2GULw.Vcq4dO6Kv_xg5N.SbWvz",
+  //     "00D2w000003ytsa!ARMAQDbl74dLnZ0jdj0uagPeh5aXLgp7ZDSE5lqhH6Uw1HVMFAycAvKQfJsEXrje4nP8AAhDjlqQO94FdOI8fGcu0ggBBEoR",
   //   id: "0052w000002VemNAAS",
   //   instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
   //   organizationId: "00D2w000003ytsaEAA",
@@ -21,10 +22,11 @@ function Home(props) {
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
+  const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
-    objApi: "",
-    fieldApi: "",
+    objApi: "Contact",
+    fieldApi: "contact.Field1__c,contact.Field2__c",
     userId: "",
     permName: "",
     profileName: "",
@@ -46,7 +48,7 @@ function Home(props) {
     if (!filters.isProfile && !filters.isPerm) {
       tempErr["typeError"] = "Atlest select one permession type";
     }
-    if (!filters.objApi && !filters.objApi) {
+    if (!filters.objApi && !filters.fieldApi) {
       tempErr["apiError"] = "Atlest enter Object or Field Api Name";
     }
     return tempErr;
@@ -58,9 +60,10 @@ function Home(props) {
   };
   useEffect(() => {
     if (Object.keys(error).length === 0 && isSubmitting) {
+      setLoading(true);
       callApi();
     }
-  }, [error, isSubmitting]);
+  }, [error, isSubmitting]); // eslint-disable-line react-hooks/exhaustive-deps
   const callApi = () => {
     let {
       objApi,
@@ -80,15 +83,25 @@ function Home(props) {
       console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
       const callback = (response) => {
         console.log("callback response,:::", response);
-        if (response) {
-          const { permSet, profile } = response.data;
+        const { data, status } = response;
+        if (status === 200) {
+          const { permSet, profile } = data;
           if (permSet) {
             setPerms(permSet);
           }
           if (profile) {
             setProfile(profile);
           }
+          if (permSet.length === 0 && profile.length === 0) {
+            setServerError("No records found");
+          }
+        } else if (status === 500) {
+          if (data.includes("Session expired or invalid")) {
+            props.history.push("/signin");
+          }
+          setServerError(data);
         }
+        setLoading(false);
       };
       postCall(
         "/api/user/accounts",
@@ -218,6 +231,13 @@ function Home(props) {
           paddingLeft: "3%",
         }}
       >
+        {serverError && (
+          <div style={{ width: "100%", textAlign: "center" }}>
+            {serverError}
+          </div>
+        )}
+        {loading && <Loader />}
+        {/* <Loader /> */}
         <div style={{ width: "50%" }}>
           {profile.length > 0 && (
             <Table

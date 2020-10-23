@@ -3,18 +3,16 @@ const postCall = (endPoint, body, callback) => {
   axios
     .post(endPoint, body)
     .then((response) => {
-      const { data } = response;
-      callback({ status: "success", data });
+      const { data, status } = response;
+      callback({ status, data });
     })
     .catch((error) => {
       console.log(error.response);
       if (error) {
         const {
-          response: {
-            data: { message },
-          },
+          response: { data, status },
         } = error;
-        return { status: "error", message };
+        callback({ status, data });
       }
     });
 };
