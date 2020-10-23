@@ -9,7 +9,6 @@ function Header() {
         </h1>
       </div>
       <div className="header-item">
-        <li>About</li>
         <li>Log out</li>
       </div>
     </header>
