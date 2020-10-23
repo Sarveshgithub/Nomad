@@ -9,15 +9,15 @@ function Home(props) {
   if (!data) {
     // props.history.push("/signin");
   }
-  data = {
-    accessToken:
-      "00D2w000003ytsa!ARMAQDbl74dLnZ0jdj0uagPeh5aXLgp7ZDSE5lqhH6Uw1HVMFAycAvKQfJsEXrje4nP8AAhDjlqQO94FdOI8fGcu0ggBBEoR",
-    id: "0052w000002VemNAAS",
-    instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
-    organizationId: "00D2w000003ytsaEAA",
-    url:
-      "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
-  };
+  // data = {
+  //   accessToken:
+  //     "00D2w000003ytsa!ARMAQDbl74dLnZ0jdj0uagPeh5aXLgp7ZDSE5lqhH6Uw1HVMFAycAvKQfJsEXrje4nP8AAhDjlqQO94FdOI8fGcu0ggBBEoR",
+  //   id: "0052w000002VemNAAS",
+  //   instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
+  //   organizationId: "00D2w000003ytsaEAA",
+  //   url:
+  //     "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
+  // };
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
