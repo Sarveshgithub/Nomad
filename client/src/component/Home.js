@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { postCall } from "./util";
 import Table from "./Table";
+import Loader from "./Loader";
 function Home(props) {
   let {
     location: { data },
@@ -10,7 +11,7 @@ function Home(props) {
   }
   data = {
     accessToken:
-      "00D2w000003ytsa!ARMAQJKNsJFWgW1R87__cVbREW2IkUfX9xKJtm7yxQJfyo_v8UdQTfhXYrQHLH1cCzywbjNUGT9YBdKq5alPUh9GksjtyvD5",
+      "00D2w000003ytsa!ARMAQDbl74dLnZ0jdj0uagPeh5aXLgp7ZDSE5lqhH6Uw1HVMFAycAvKQfJsEXrje4nP8AAhDjlqQO94FdOI8fGcu0ggBBEoR",
     id: "0052w000002VemNAAS",
     instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
     organizationId: "00D2w000003ytsaEAA",
@@ -21,6 +22,7 @@ function Home(props) {
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
+  const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
     objApi: "Contact",
@@ -58,6 +60,7 @@ function Home(props) {
   };
   useEffect(() => {
     if (Object.keys(error).length === 0 && isSubmitting) {
+      setLoading(true);
       callApi();
     }
   }, [error, isSubmitting]);
@@ -80,7 +83,7 @@ function Home(props) {
       console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
       const callback = (response) => {
         console.log("callback response,:::", response);
-        if (response) {
+        if (response.status === 200) {
           const { permSet, profile } = response.data;
           if (permSet) {
             setPerms(permSet);
@@ -88,7 +91,13 @@ function Home(props) {
           if (profile) {
             setProfile(profile);
           }
+          if (permSet.length == 0 && profile.length == 0) {
+            setServerError("No records found");
+          }
+        } else if (response.status === 500) {
+          setServerError(response.statusText);
         }
+        setLoading(false);
       };
       postCall(
         "/api/user/accounts",
@@ -218,6 +227,13 @@ function Home(props) {
           paddingLeft: "3%",
         }}
       >
+        {serverError && (
+          <div style={{ width: "100%", textAlign: "center" }}>
+            {serverError}
+          </div>
+        )}
+        {loading && <Loader />}
+        {/* <Loader /> */}
         <div style={{ width: "50%" }}>
           {profile.length > 0 && (
             <Table
