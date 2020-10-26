@@ -5,10 +5,12 @@ const bodyParser = require("body-parser");
 const jsforce = require("jsforce");
 const path = require("path");
 const app = express();
+
 app.use(bodyParser.json());
+// app.use(function (req, res, next) {});
 const oauth2 = new jsforce.OAuth2({
   // you can change loginUrl to connect to sandbox or prerelease env.
-  loginUrl: "https://login.salesforce.com/",
+  loginUrl: "https://cors-anywhere.herokuapp.com/https://login.salesforce.com",
   //clientId and Secret will be provided when you create a new connected app in your SF developer account
   clientId:
     "3MVG9n_HvETGhr3AuIuvwiy4zMKg1NuqY86.pQH78QXyvdMeKkXQioAU_xnkonkzDYe2pHDAc6Z749YzGNriD",
