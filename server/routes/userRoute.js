@@ -1,6 +1,9 @@
 const express = require("express");
 const jsforce = require("jsforce");
 const router = express.Router();
+// outh2.0
+
+//end outh2.0
 router.post("/login", async (req, res) => {
   try {
     console.log("response:::", req.body);
@@ -16,6 +19,7 @@ router.post("/login", async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 });
+
 router.post("/accounts", async (req, res) => {
   // if auth has not been set, redirect to index
   try {
