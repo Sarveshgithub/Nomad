@@ -30,28 +30,26 @@ function Outh(props) {
   useEffect(() => {
     if (Object.keys(error).length === 0 && isSubmitting) {
       console.log("test::", user);
-      console.log("sdfsdfsd");
-      window.location = "/sflogin";
-      // axios
-      //   .get("http://localhost:5000/sflogin", user)
-      //   .then((response) => {
-      //     console.log("response::", response);
-      //     //   props.history.push({
-      //     //     pathname: "/home",
-      //     //     data: response.data,
-      //     //   });
-      //   })
-      //   .catch((error) => {
-      //     console.log("error::", error.response);
-      //     //   if (error) {
-      //     //     const {
-      //     //       response: {
-      //     //         data: { message },
-      //     //       },
-      //     //     } = error;
-      //     //     setServerError(message);
-      //     //   }
-      //   });
+      axios
+        .get("/sflogin", user)
+        .then((response) => {
+          console.log("response::", response);
+          //   props.history.push({
+          //     pathname: "/home",
+          //     data: response.data,
+          //   });
+        })
+        .catch((error) => {
+          console.log("error::", error.response);
+          //   if (error) {
+          //     const {
+          //       response: {
+          //         data: { message },
+          //       },
+          //     } = error;
+          //     setServerError(message);
+          //   }
+        });
     }
     // eslint-disable-line react-hooks/exhaustive-deps
   }, [error, isSubmitting, user, props.history]);
