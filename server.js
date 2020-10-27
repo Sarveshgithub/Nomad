@@ -5,19 +5,18 @@ const bodyParser = require("body-parser");
 const jsforce = require("jsforce");
 const path = require("path");
 const app = express();
-
+const port = process.env.PORT || 5000;
+const redirectUri = `https://fierce-cliffs-90769.herokuapp.com:${port}/token`;
 app.use(bodyParser.json());
 // app.use(function (req, res, next) {});
 const oauth2 = new jsforce.OAuth2({
-  // you can change loginUrl to connect to sandbox or prerelease env.
   loginUrl: "https://login.salesforce.com",
-  //clientId and Secret will be provided when you create a new connected app in your SF developer account
   clientId:
     "3MVG9n_HvETGhr3AuIuvwiy4zMKg1NuqY86.pQH78QXyvdMeKkXQioAU_xnkonkzDYe2pHDAc6Z749YzGNriD",
   clientSecret:
     "118A585CF9BF43B335A2ABB3F5130D3B458E1E2072A739C1BE2613C18C001118",
   //redirectUri : 'http://localhost:' + port +'/token'
-  redirectUri: "http://localhost:5000/token",
+  redirectUri: redirectUri,
 });
 app.get("/sflogin", function (req, res) {
   // Redirect to Salesforce login/authorization page
@@ -55,7 +54,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log("server start");
 });
