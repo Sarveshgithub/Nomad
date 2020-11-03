@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 function Signin(props) {
   const [user, setUser] = useState({
@@ -128,9 +127,6 @@ function Signin(props) {
             <button className="form-button" type="submit">
               Login
             </button>
-          </div>
-          <div className="form-footer">
-            Don't have an account?<Link to="/register">Sign Up</Link>
           </div>
         </form>
       </div>

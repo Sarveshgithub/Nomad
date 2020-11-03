@@ -6,7 +6,6 @@ const router = express.Router();
 //end outh2.0
 router.post("/login", async (req, res) => {
   try {
-    console.log("response:::", req.body);
     const { userName, password, secToken, orgType } = req.body;
     const conn = new jsforce.Connection({
       loginUrl: orgType,
@@ -28,7 +27,6 @@ router.post("/accounts", async (req, res) => {
       accessToken: accessToken,
       instanceUrl: instanceUrl,
     });
-    console.log("req.body:::", req.body);
     let assignedPerm = [];
     if (userId) {
       const permissionAssignment = `SELECT Id, PermissionSetId FROM PermissionSetAssignment WHERE AssigneeId = ${userId}`;
@@ -43,8 +41,6 @@ router.post("/accounts", async (req, res) => {
     }
     let fieldQuery = fieldSOQL({ ...req.body, assignedPerm }),
       objectQuery = objectSOQL({ ...req.body, assignedPerm });
-    console.log("query::", fieldQuery);
-    console.log("objectQuery:::", objectQuery);
 
     const data = [];
     const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
@@ -56,14 +52,12 @@ router.post("/accounts", async (req, res) => {
     if (objectData.records) {
       data.push(...objectData.records);
     }
-    console.log("data:::", data);
     if (data) {
       res.send(resData(data, req.body));
     } else {
       res.send("No Record Found");
     }
   } catch (err) {
-    console.log("error", err);
     res.status(500).send(err.message);
   }
 });
