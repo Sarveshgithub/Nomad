@@ -228,7 +228,6 @@ function Home(props) {
           </div>
         )}
         {loading && <Loader />}
-        {/* <Loader /> */}
         <div style={{ width: "50%" }}>
           {profile.length > 0 && (
             <Table

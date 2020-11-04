@@ -10,10 +10,10 @@ function App() {
       <main>
         <BrowserRouter>
           <Route path="/signin" component={Signin} />
-          <Route exact path="/">
+          <Route exact path="/home" component={Home} />
+          <Route path="*">
             <Redirect to="/signin" />
           </Route>
-          <Route path="/home" component={Home} />
         </BrowserRouter>
       </main>
     </div>

@@ -1,6 +1,7 @@
 import React from "react";
 
 function Header() {
+  console.log("routesss", window.location.pathname);
   return (
     <header>
       <div>
@@ -8,9 +9,9 @@ function Header() {
           <em>SFDC Perms</em>
         </h1>
       </div>
-      <div className="header-item">
+      {/* <div className="header-item">
         <li>Log out</li>
-      </div>
+      </div> */}
     </header>
   );
 }
