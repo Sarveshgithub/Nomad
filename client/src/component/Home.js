@@ -7,17 +7,8 @@ function Home(props) {
     location: { data },
   } = props;
   if (!data) {
-    // props.history.push("/signin");
+    props.history.push("/signin");
   }
-  // data = {
-  //   accessToken:
-  //     "00D2w000003ytsa!ARMAQDbl74dLnZ0jdj0uagPeh5aXLgp7ZDSE5lqhH6Uw1HVMFAycAvKQfJsEXrje4nP8AAhDjlqQO94FdOI8fGcu0ggBBEoR",
-  //   id: "0052w000002VemNAAS",
-  //   instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
-  //   organizationId: "00D2w000003ytsaEAA",
-  //   url:
-  //     "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
-  // };
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,8 +16,8 @@ function Home(props) {
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
-    objApi: "Contact",
-    fieldApi: "contact.Field1__c,contact.Field2__c",
+    objApi: "",
+    fieldApi: "",
     userId: "",
     permName: "",
     profileName: "",
@@ -237,7 +228,6 @@ function Home(props) {
           </div>
         )}
         {loading && <Loader />}
-        {/* <Loader /> */}
         <div style={{ width: "50%" }}>
           {profile.length > 0 && (
             <Table
