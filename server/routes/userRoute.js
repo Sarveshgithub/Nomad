@@ -1,9 +1,7 @@
 const express = require("express");
 const jsforce = require("jsforce");
 const router = express.Router();
-// outh2.0
 
-//end outh2.0
 router.post("/login", async (req, res) => {
   try {
     const { userName, password, secToken, orgType } = req.body;
@@ -20,7 +18,6 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/accounts", async (req, res) => {
-  // if auth has not been set, redirect to index
   try {
     const { accessToken, instanceUrl, userId } = req.body;
     const conn = new jsforce.Connection({
