@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Checkicon from "./Checkicon";
 import Crossicon from "./Crossicon";
 import ChevronDownIcon from "./ChevronDownIcon";
@@ -22,6 +22,7 @@ const RenderRow = (props) => {
 };
 
 function Table({ cols, data, title }) {
+  const [data, setError] = useState(data);
   const toggle = (Id) => {
     let element = document.getElementById(Id),
       style = window.getComputedStyle(element),
@@ -31,6 +32,9 @@ function Table({ cols, data, title }) {
     } else {
       document.getElementById(Id).style.display = "none";
     }
+    let tempdata = data.filter((val) => val.Id === Id);
+    console.log("tempdata::", tempdata);
+    data = tempdata;
   };
   return (
     <div>
