@@ -22,19 +22,18 @@ const RenderRow = (props) => {
 };
 
 function Table({ cols, data, title }) {
-  const [data, setError] = useState(data);
   const toggle = (Id) => {
-    let element = document.getElementById(Id),
-      style = window.getComputedStyle(element),
-      display = style.getPropertyValue("display");
-    if (display === "none") {
-      document.getElementById(Id).style.display = "block";
-    } else {
-      document.getElementById(Id).style.display = "none";
-    }
-    let tempdata = data.filter((val) => val.Id === Id);
-    console.log("tempdata::", tempdata);
-    data = tempdata;
+    let element = document.querySelectorAll("[id=" + `'${Id}'` + "]");
+    console.log("element::", element);
+    element.forEach((val) => {
+      let style = window.getComputedStyle(val),
+        display = style.getPropertyValue("display");
+      if (display === "none") {
+        val.style.display = "block";
+      } else {
+        val.style.display = "none";
+      }
+    });
   };
   return (
     <div>
@@ -42,18 +41,28 @@ function Table({ cols, data, title }) {
       {data &&
         data.map((val) => (
           <div key={val.Id}>
-            <h3>
+            <div style={{ display: "flex" }}>
               <span onClick={() => toggle(val.Id)}>
-                {val.show ? <ChevronDownIcon /> : <ChevronRightIcon />}
+                <div id={val.Id} style={{ display: "none" }}>
+                  <ChevronDownIcon />
+                </div>
+
+                <div id={val.Id} style={{ display: "block" }}>
+                  <ChevronRightIcon />
+                </div>
               </span>
-              <a
-                href={"https://sarvesh-sfdx-dev-ed.my.salesforce.com/" + val.Id}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {val["Name"]}
-              </a>
-            </h3>
+              <h3>
+                <a
+                  href={
+                    "https://sarvesh-sfdx-dev-ed.my.salesforce.com/" + val.Id
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {val["Name"]}
+                </a>
+              </h3>
+            </div>
             <div
               id={val.Id}
               style={val.show ? "" : { display: "none", paddingLeft: "2em" }}

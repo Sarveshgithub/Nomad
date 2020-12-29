@@ -11,9 +11,9 @@ function App() {
         <BrowserRouter>
           <Route path="/signin" component={Signin} />
           <Route exact path="/home" component={Home} />
-          <Route path="*">
+          {/* <Route path="*">
             <Redirect to="/signin" />
-          </Route>
+          </Route> */}
         </BrowserRouter>
       </main>
     </div>
