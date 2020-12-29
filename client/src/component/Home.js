@@ -249,6 +249,7 @@ function Home(props) {
               ]}
               data={profile}
               IsOwnedByProfile={true}
+              instanceUrl={data.instanceUrl}
             />
           )}
         </div>
@@ -264,6 +265,7 @@ function Home(props) {
               ]}
               data={permSet}
               IsOwnedByProfile={false}
+              instanceUrl={data.instanceUrl}
             />
           )}
         </div>

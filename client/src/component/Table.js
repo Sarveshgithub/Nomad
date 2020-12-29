@@ -21,10 +21,9 @@ const RenderRow = (props) => {
   });
 };
 
-function Table({ cols, data, title }) {
+function Table({ cols, data, title, instanceUrl }) {
   const toggle = (Id) => {
     let element = document.querySelectorAll("[id=" + `'${Id}'` + "]");
-    console.log("element::", element);
     element.forEach((val) => {
       let style = window.getComputedStyle(val),
         display = style.getPropertyValue("display");
@@ -53,9 +52,7 @@ function Table({ cols, data, title }) {
               </span>
               <h3>
                 <a
-                  href={
-                    "https://sarvesh-sfdx-dev-ed.my.salesforce.com/" + val.Id
-                  }
+                  href={instanceUrl + "/" + val.Id}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
