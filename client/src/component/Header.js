@@ -5,7 +5,7 @@ function Header() {
     <header>
       <div>
         <h1>
-          <em>Nomad</em>
+          <em>Nomad24</em>
         </h1>
       </div>
       {/* <div className="header-item">
