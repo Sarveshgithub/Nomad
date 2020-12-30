@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Checkicon from "./Checkicon";
 import Crossicon from "./Crossicon";
 import ChevronDownIcon from "./ChevronDownIcon";
@@ -23,7 +23,7 @@ const RenderRow = (props) => {
 
 function Table({ cols, data, title, instanceUrl }) {
   const toggle = (Id) => {
-    let element = document.querySelectorAll("[id=" + `'${Id}'` + "]");
+    let element = document.querySelectorAll(`[id='${Id}']`);
     element.forEach((val) => {
       let style = window.getComputedStyle(val),
         display = style.getPropertyValue("display");
