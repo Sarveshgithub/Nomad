@@ -3,11 +3,20 @@ import { postCall } from "./util";
 import Table from "./Table";
 import Loader from "./Loader";
 function Home(props) {
-  let {
-    location: { data },
-  } = props;
+  // let {
+  //   location: { data },
+  // } = props;
+  let data = {
+    accessToken:
+      "00D2w000003ytsa!ARMAQMr26UexMQMWCHqUY_RO_0DmDlqchdFUQrS2WnQI1aiNxZft6vZmbdo7BMAe5NQ2WXLp_q2Y74oGjucL0v7qpXsN762Z",
+    id: "0052w000002VemNAAS",
+    instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
+    organizationId: "00D2w000003ytsaEAA",
+    url:
+      "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
+  };
   if (!data) {
-    props.history.push("/signin");
+    // props.history.push("/signin");
   }
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
@@ -16,8 +25,8 @@ function Home(props) {
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
-    objApi: "",
-    fieldApi: "",
+    objApi: "contact",
+    fieldApi: "contact.name,contact.email",
     userId: "",
     permName: "",
     profileName: "",
@@ -240,6 +249,7 @@ function Home(props) {
               ]}
               data={profile}
               IsOwnedByProfile={true}
+              instanceUrl={data.instanceUrl}
             />
           )}
         </div>
@@ -255,6 +265,7 @@ function Home(props) {
               ]}
               data={permSet}
               IsOwnedByProfile={false}
+              instanceUrl={data.instanceUrl}
             />
           )}
         </div>
