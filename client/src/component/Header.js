@@ -2,15 +2,17 @@ import React from "react";
 
 function Header() {
   return (
-    <header>
+    <header
+      style={{
+        padding: "0 1em 0 1em",
+      }}
+    >
       <div>
-        <h1>
-          <em>Nomad24</em>
-        </h1>
+        <h1>Nomad24</h1>
       </div>
-      {/* <div className="header-item">
-        <li>Log out</li>
-      </div> */}
+      <div className="header-item">
+        <li>Log Issue</li>
+      </div>
     </header>
   );
 }
