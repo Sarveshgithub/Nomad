@@ -10,7 +10,7 @@ function Signin(props) {
     secToken: "",
     orgType: "",
   });
-  
+
   const [error, setError] = useState({});
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,6 +53,7 @@ function Signin(props) {
             pathname: "/home",
             data: response.data,
           });
+          setIsSubmitting(false);
         })
         .catch((error) => {
           console.log(error.response);
@@ -64,6 +65,7 @@ function Signin(props) {
             } = error;
             setServerError(message);
           }
+          setIsSubmitting(false);
         });
     }
     // eslint-disable-line react-hooks/exhaustive-deps

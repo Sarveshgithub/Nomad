@@ -1,12 +1,11 @@
 import React from "react";
 
 function Header() {
-  console.log("routesss", window.location.pathname);
   return (
     <header>
       <div>
         <h1>
-          <em>SFDC Perms</em>
+          <em>Nomad</em>
         </h1>
       </div>
       {/* <div className="header-item">
