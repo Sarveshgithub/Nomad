@@ -1,22 +1,48 @@
 const express = require("express");
 const jsforce = require("jsforce");
 const router = express.Router();
-
-router.post("/login", async (req, res) => {
-  try {
-    const { userName, password, secToken, orgType } = req.body;
-    const conn = new jsforce.Connection({
-      loginUrl: orgType,
-    });
-    const response = await conn.login(userName, password + secToken);
-    response["accessToken"] = conn.accessToken;
-    response["instanceUrl"] = conn.instanceUrl;
-    res.send(response);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
+const oauth2 = new jsforce.OAuth2({
+  loginUrl: "https://test.salesforce.com",
+  clientId:
+    "3MVG9n_HvETGhr3AuIuvwiy4zMKg1NuqY86.pQH78QXyvdMeKkXQioAU_xnkonkzDYe2pHDAc6Z749YzGNriD",
+  clientSecret:
+    "118A585CF9BF43B335A2ABB3F5130D3B458E1E2072A739C1BE2613C18C001118",
+  redirectUri: "http://localhost:5000/api/user/auth",
 });
-
+router.get("/login", function (req, res) {
+  res.redirect(oauth2.getAuthorizationUrl({ scope: "api id web" }));
+});
+router.get("/auth", function (request, response) {
+  if (!request.query.code) {
+    response
+      .status(500)
+      .send("Failed to get authorization code from server callback.");
+    return;
+  }
+  // Authenticate with OAuth
+  const conn = new jsforce.Connection({
+    oauth2: oauth2,
+  });
+  conn.authorize(request.query.code, function (error, userInfo) {
+    if (error) {
+      console.log("Salesforce authorization error: " + JSON.stringify(error));
+      response.status(500).json(error);
+      return;
+    }
+    console.log(conn.accessToken);
+    console.log(conn.refreshToken);
+    console.log(conn.instanceUrl);
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+    // Store oauth session data in server (never expose it directly to client)
+    request.session.sfdcAuth = {
+      instanceUrl: conn.instanceUrl,
+      accessToken: conn.accessToken,
+    };
+    // Redirect to app main page
+    return response.redirect("http://localhost:3000");
+  });
+});
 router.post("/accounts", async (req, res) => {
   try {
     const { accessToken, instanceUrl, userId } = req.body;

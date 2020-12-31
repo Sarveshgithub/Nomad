@@ -1,9 +1,18 @@
 const express = require("express");
 const userRoute = require("./server/routes/userRoute");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 const path = require("path");
 const app = express();
 const port = process.env.PORT || 5000;
+app.use(
+  session({
+    secret: "test123",
+    cookie: { secure: true },
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use(bodyParser.json());
 
 app.use("/api/user", userRoute);
@@ -14,4 +23,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(port, () => {});
+app.listen(port, () => {
+  console.log("server started port::::", port);
+});
