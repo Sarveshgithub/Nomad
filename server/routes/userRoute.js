@@ -1,13 +1,37 @@
 const express = require("express");
 const jsforce = require("jsforce");
 const router = express.Router();
+const config = require("../config");
 const oauth2 = new jsforce.OAuth2({
   loginUrl: "https://test.salesforce.com",
-  clientId:
-    "3MVG9n_HvETGhr3AuIuvwiy4zMKg1NuqY86.pQH78QXyvdMeKkXQioAU_xnkonkzDYe2pHDAc6Z749YzGNriD",
-  clientSecret:
-    "118A585CF9BF43B335A2ABB3F5130D3B458E1E2072A739C1BE2613C18C001118",
-  redirectUri: "http://localhost:5000/api/user/auth",
+  clientId: config.CLIENT_ID,
+  clientSecret: config.SECRET,
+  redirectUri: config.REDIRECT,
+});
+function getSession(request, response) {
+  const session = request.session;
+  if (!session.sfdcAuth) {
+    response.status(401).send("No active session");
+    return null;
+  }
+  return session;
+}
+function resumeSalesforceConnection(session) {
+  return new jsforce.Connection({
+    instanceUrl: session.sfdcAuth.instanceUrl,
+    accessToken: session.sfdcAuth.accessToken,
+  });
+}
+router.get("/whoami", function (request, response) {
+  const session = getSession(request, response);
+  if (session == null) {
+    return;
+  }
+  // Request session info from Salesforce
+  const conn = resumeSalesforceConnection(session);
+  conn.identity(function (error, res) {
+    response.send(res);
+  });
 });
 router.get("/login", function (req, res) {
   res.redirect(oauth2.getAuthorizationUrl({ scope: "api id web" }));
@@ -43,6 +67,7 @@ router.get("/auth", function (request, response) {
     return response.redirect("http://localhost:3000");
   });
 });
+
 router.post("/accounts", async (req, res) => {
   try {
     const { accessToken, instanceUrl, userId } = req.body;
