@@ -3,21 +3,7 @@ import { postCall } from "./util";
 import Table from "./Table";
 import Loader from "./Loader";
 function Home(props) {
-  let {
-    location: { data },
-  } = props;
-  // let data = {
-  //   accessToken:
-  //     "00D2w000003ytsa!ARMAQMr26UexMQMWCHqUY_RO_0DmDlqchdFUQrS2WnQI1aiNxZft6vZmbdo7BMAe5NQ2WXLp_q2Y74oGjucL0v7qpXsN762Z",
-  //   id: "0052w000002VemNAAS",
-  //   instanceUrl: "https://sarvesh-sfdx-dev-ed.my.salesforce.com",
-  //   organizationId: "00D2w000003ytsaEAA",
-  //   url:
-  //     "https://login.salesforce.com/id/00D2w000003ytsaEAA/0052w000002VemNAAS",
-  // };
-  if (!data) {
-    props.history.push("/signin");
-  }
+  const { instanceUrl } = props;
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -79,45 +65,42 @@ function Home(props) {
     permName = permName ? `(${addQuotes(permName)})` : "";
     profileName = profileName ? `(${addQuotes(profileName)})` : "";
     userId = userId ? addQuotes(userId) : "";
-    if (data) {
-      console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
-      const callback = (response) => {
-        console.log("callback response,:::", response);
-        const { data, status } = response;
-        if (status === 200) {
-          const { permSet, profile } = data;
-          if (permSet) {
-            setPerms(permSet);
-          }
-          if (profile) {
-            setProfile(profile);
-          }
-          if (permSet.length === 0 && profile.length === 0) {
-            setServerError("No records found");
-          }
-        } else if (status === 500) {
-          if (data.includes("Session expired or invalid")) {
-            props.history.push("/signin");
-          }
-          setServerError(data);
+    console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
+    const callback = (response) => {
+      console.log("callback response,:::", response);
+      const { data, status } = response;
+      if (status === 200) {
+        const { permSet, profile } = data;
+        if (permSet) {
+          setPerms(permSet);
         }
-        setLoading(false);
-      };
-      postCall(
-        "/api/user/accounts",
-        {
-          objApi,
-          fieldApi,
-          permName,
-          profileName,
-          isProfile,
-          isPerm,
-          userId,
-          ...data,
-        },
-        callback
-      );
-    }
+        if (profile) {
+          setProfile(profile);
+        }
+        if (permSet.length === 0 && profile.length === 0) {
+          setServerError("No records found");
+        }
+      } else if (status === 500) {
+        if (data.includes("Session expired or invalid")) {
+          props.history.push("/signin");
+        }
+        setServerError(data);
+      }
+      setLoading(false);
+    };
+    postCall(
+      "/api/user/accounts",
+      {
+        objApi,
+        fieldApi,
+        permName,
+        profileName,
+        isProfile,
+        isPerm,
+        userId,
+      },
+      callback
+    );
   };
 
   const addQuotes = (data) => {
@@ -249,7 +232,7 @@ function Home(props) {
               ]}
               data={profile}
               IsOwnedByProfile={true}
-              instanceUrl={data.instanceUrl}
+              instanceUrl={instanceUrl}
             />
           )}
         </div>
@@ -265,7 +248,7 @@ function Home(props) {
               ]}
               data={permSet}
               IsOwnedByProfile={false}
-              instanceUrl={data.instanceUrl}
+              instanceUrl={instanceUrl}
             />
           )}
         </div>

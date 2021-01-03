@@ -5,10 +5,11 @@ const config = require("../config");
 const oauth2 = new jsforce.OAuth2({
   loginUrl: "https://test.salesforce.com",
   clientId: config.CLIENT_ID,
-  clientSecret: config.SECRET,
+  clientSecret: config.CLIENT_SECRET,
   redirectUri: config.REDIRECT,
 });
 function getSession(request, response) {
+  console.log("trst::: session:::", request.session);
   const session = request.session;
   if (!session.sfdcAuth) {
     response.status(401).send("No active session");
@@ -30,10 +31,11 @@ router.get("/whoami", function (request, response) {
   // Request session info from Salesforce
   const conn = resumeSalesforceConnection(session);
   conn.identity(function (error, res) {
-    response.send(res);
+    response.send({ res, instanceUrl: session.sfdcAuth.instanceUrl });
   });
 });
 router.get("/login", function (req, res) {
+  console.log("oauth2:::", oauth2);
   res.redirect(oauth2.getAuthorizationUrl({ scope: "api id web" }));
 });
 router.get("/auth", function (request, response) {
@@ -63,6 +65,7 @@ router.get("/auth", function (request, response) {
       instanceUrl: conn.instanceUrl,
       accessToken: conn.accessToken,
     };
+    console.log("session:::", request);
     // Redirect to app main page
     return response.redirect("http://localhost:3000");
   });
