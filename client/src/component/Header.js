@@ -26,7 +26,7 @@ function Header(props) {
         {user && (
           <li>
             <a
-              href="http://localhost:5000/api/user/logout"
+              href="https://nomad24.herokuapp.com/api/user/logout"
               rel="noreferrer noopener"
             >
               Log Out
