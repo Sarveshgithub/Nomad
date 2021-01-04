@@ -27,7 +27,7 @@ router.get("/whoami", function (request, response) {
   // Request session info from Salesforce
   const conn = resumeSalesforceConnection(session);
   conn.identity(function (error, res) {
-    response.send({ res, instanceUrl: session.sfdcAuth.instanceUrl });
+    response.send({ ...res, instanceUrl: session.sfdcAuth.instanceUrl });
   });
 });
 router.get("/login", function (req, res) {
@@ -71,7 +71,7 @@ router.get("/auth", function (request, response) {
     };
     // console.log("session:::", request);
     // Redirect to app main page
-    return response.redirect("http://localhost:3000/home");
+    return response.redirect("http://localhost:3000");
   });
 });
 router.get("/logout", function (request, response) {
@@ -91,7 +91,7 @@ router.get("/logout", function (request, response) {
         );
       }
     });
-    return response.redirect("http://localhost:3000/signin");
+    return response.redirect("http://localhost:3000");
   });
 });
 router.post("/accounts", async (req, res) => {
