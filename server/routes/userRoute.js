@@ -71,7 +71,7 @@ router.get("/auth", function (request, response) {
     };
     // console.log("session:::", request);
     // Redirect to app main page
-    return response.redirect("http://localhost:3000");
+    return response.redirect("/index.html");
   });
 });
 router.get("/logout", function (request, response) {
@@ -91,7 +91,7 @@ router.get("/logout", function (request, response) {
         );
       }
     });
-    return response.redirect("http://localhost:3000");
+    return response.redirect("/index.html");
   });
 });
 router.post("/accounts", async (req, res) => {
