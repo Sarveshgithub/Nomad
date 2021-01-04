@@ -98,8 +98,8 @@ router.post("/accounts", async (req, res) => {
   try {
     const { accessToken, instanceUrl, userId } = req.body;
     const conn = new jsforce.Connection({
-      accessToken: accessToken,
-      instanceUrl: instanceUrl,
+      accessToken: req.session.sfdcAuth.accessToken,
+      instanceUrl: req.session.sfdcAuth.instanceUrl,
     });
     let assignedPerm = [];
     if (userId) {

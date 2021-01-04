@@ -2,35 +2,12 @@
 // Security token (case-sensitive): As0Iba7gK2T9sqzdE7CZRh1rn
 // password : Code@123
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 function Signin(props) {
   const [user, setUser] = useState({
     orgType: "",
   });
-
   const [error, setError] = useState({});
-  const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  useEffect(() => {
-    axios
-      .get("/api/user/whoami", user)
-      .then((response) => {
-        console.log("response:::", response);
-        props.history.push({
-          pathname: "/home",
-          data: response.data,
-        });
-      })
-      .catch((error) => {
-        console.log(error.response);
-        if (error) {
-          const {
-            response: { data },
-          } = error;
-          setServerError(data);
-        }
-      });
-  }, []);
   const onchange = (event) => {
     const { name, value } = event.target;
     setUser({
@@ -57,9 +34,7 @@ function Signin(props) {
     }
     // eslint-disable-line react-hooks/exhaustive-deps
   }, [error, isSubmitting, user, props.history]);
-  return !serverError ? (
-    <p className="redColor">{serverError}</p>
-  ) : (
+  return (
     <section>
       <div className="wrap">
         <form className="login-form" onSubmit={submitHandler} noValidate>
