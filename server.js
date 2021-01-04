@@ -4,11 +4,12 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const path = require("path");
 const app = express();
+const config = require("./server/config");
 const port = process.env.PORT || 5000;
 app.use(
   session({
     secret: "test123",
-    cookie: { secure: false },
+    cookie: { secure: config.HTTP == "true" },
     resave: false,
     saveUninitialized: false,
   })
