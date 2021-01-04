@@ -3,7 +3,7 @@ import { postCall } from "./util";
 import Table from "./Table";
 import Loader from "./Loader";
 function Home(props) {
-  const { instanceUrl } = props;
+  const instanceUrl = "www.google.com";
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);

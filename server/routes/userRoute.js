@@ -2,12 +2,7 @@ const express = require("express");
 const jsforce = require("jsforce");
 const router = express.Router();
 const config = require("../config");
-const oauth2 = new jsforce.OAuth2({
-  loginUrl: "https://test.salesforce.com",
-  clientId: config.CLIENT_ID,
-  clientSecret: config.CLIENT_SECRET,
-  redirectUri: config.REDIRECT,
-});
+let oauth2;
 function getSession(request, response) {
   console.log("trst::: session:::", request.session);
   const session = request.session;
@@ -21,6 +16,7 @@ function resumeSalesforceConnection(session) {
   return new jsforce.Connection({
     instanceUrl: session.sfdcAuth.instanceUrl,
     accessToken: session.sfdcAuth.accessToken,
+    loginUrl: session.sfdcAuth.loginUrl,
   });
 }
 router.get("/whoami", function (request, response) {
@@ -35,7 +31,14 @@ router.get("/whoami", function (request, response) {
   });
 });
 router.get("/login", function (req, res) {
+  console.log("req:::", req.query.orgType);
   console.log("oauth2:::", oauth2);
+  oauth2 = new jsforce.OAuth2({
+    loginUrl: req.query.orgType,
+    clientId: config.CLIENT_ID,
+    clientSecret: config.CLIENT_SECRET,
+    redirectUri: config.REDIRECT,
+  });
   res.redirect(oauth2.getAuthorizationUrl({ scope: "api id web" }));
 });
 router.get("/auth", function (request, response) {
@@ -62,15 +65,35 @@ router.get("/auth", function (request, response) {
     console.log("Org ID: " + userInfo.organizationId);
     // Store oauth session data in server (never expose it directly to client)
     request.session.sfdcAuth = {
+      loginUrl: oauth2.loginUrl,
       instanceUrl: conn.instanceUrl,
       accessToken: conn.accessToken,
     };
-    console.log("session:::", request);
+    // console.log("session:::", request);
     // Redirect to app main page
-    return response.redirect("http://localhost:3000");
+    return response.redirect("http://localhost:3000/home");
   });
 });
-
+router.get("/logout", function (request, response) {
+  const session = getSession(request, response);
+  if (session == null) return;
+  const conn = resumeSalesforceConnection(session);
+  conn.logout(function (error) {
+    if (error) {
+      console.error("Salesforce OAuth revoke error: " + JSON.stringify(error));
+      response.status(500).json(error);
+      return;
+    }
+    session.destroy(function (error) {
+      if (error) {
+        console.error(
+          "Salesforce session destruction error: " + JSON.stringify(error)
+        );
+      }
+    });
+    return response.redirect("http://localhost:3000/signin");
+  });
+});
 router.post("/accounts", async (req, res) => {
   try {
     const { accessToken, instanceUrl, userId } = req.body;

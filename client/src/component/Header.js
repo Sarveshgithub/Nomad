@@ -20,6 +20,14 @@ function Header() {
             Log Issue
           </a>
         </li>
+        <li>
+          <a
+            href="http://localhost:5000/api/user/logout"
+            rel="noreferrer noopener"
+          >
+            Log Out
+          </a>
+        </li>
       </div>
     </header>
   );
