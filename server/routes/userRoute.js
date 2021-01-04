@@ -1,28 +1,105 @@
 const express = require("express");
 const jsforce = require("jsforce");
 const router = express.Router();
-
-router.post("/login", async (req, res) => {
-  try {
-    const { userName, password, secToken, orgType } = req.body;
-    const conn = new jsforce.Connection({
-      loginUrl: orgType,
-    });
-    const response = await conn.login(userName, password + secToken);
-    response["accessToken"] = conn.accessToken;
-    response["instanceUrl"] = conn.instanceUrl;
-    res.send(response);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
+const config = require("../config");
+let oauth2;
+function getSession(request, response) {
+  console.log("trst::: session:::", request.session);
+  const session = request.session;
+  if (!session.sfdcAuth) {
+    response.status(401).send("No active session");
+    return null;
   }
+  return session;
+}
+function resumeSalesforceConnection(session) {
+  return new jsforce.Connection({
+    instanceUrl: session.sfdcAuth.instanceUrl,
+    accessToken: session.sfdcAuth.accessToken,
+    loginUrl: session.sfdcAuth.loginUrl,
+  });
+}
+router.get("/whoami", function (request, response) {
+  const session = getSession(request, response);
+  if (session == null) {
+    return;
+  }
+  // Request session info from Salesforce
+  const conn = resumeSalesforceConnection(session);
+  conn.identity(function (error, res) {
+    response.send({ ...res, instanceUrl: session.sfdcAuth.instanceUrl });
+  });
 });
-
+router.get("/login", function (req, res) {
+  console.log("req:::", req.query.orgType);
+  console.log("oauth2:::", oauth2);
+  oauth2 = new jsforce.OAuth2({
+    loginUrl: req.query.orgType,
+    clientId: config.CLIENT_ID,
+    clientSecret: config.CLIENT_SECRET,
+    redirectUri: config.REDIRECT,
+  });
+  res.redirect(oauth2.getAuthorizationUrl({ scope: "api id web" }));
+});
+router.get("/auth", function (request, response) {
+  if (!request.query.code) {
+    response
+      .status(500)
+      .send("Failed to get authorization code from server callback.");
+    return;
+  }
+  // Authenticate with OAuth
+  const conn = new jsforce.Connection({
+    oauth2: oauth2,
+  });
+  conn.authorize(request.query.code, function (error, userInfo) {
+    if (error) {
+      console.log("Salesforce authorization error: " + JSON.stringify(error));
+      response.status(500).json(error);
+      return;
+    }
+    console.log(conn.accessToken);
+    console.log(conn.refreshToken);
+    console.log(conn.instanceUrl);
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+    // Store oauth session data in server (never expose it directly to client)
+    request.session.sfdcAuth = {
+      loginUrl: oauth2.loginUrl,
+      instanceUrl: conn.instanceUrl,
+      accessToken: conn.accessToken,
+    };
+    // console.log("session:::", request);
+    // Redirect to app main page
+    return response.redirect("http://localhost:3000");
+  });
+});
+router.get("/logout", function (request, response) {
+  const session = getSession(request, response);
+  if (session == null) return;
+  const conn = resumeSalesforceConnection(session);
+  conn.logout(function (error) {
+    if (error) {
+      console.error("Salesforce OAuth revoke error: " + JSON.stringify(error));
+      response.status(500).json(error);
+      return;
+    }
+    session.destroy(function (error) {
+      if (error) {
+        console.error(
+          "Salesforce session destruction error: " + JSON.stringify(error)
+        );
+      }
+    });
+    return response.redirect("http://localhost:3000");
+  });
+});
 router.post("/accounts", async (req, res) => {
   try {
     const { accessToken, instanceUrl, userId } = req.body;
     const conn = new jsforce.Connection({
-      accessToken: accessToken,
-      instanceUrl: instanceUrl,
+      accessToken: req.session.sfdcAuth.accessToken,
+      instanceUrl: req.session.sfdcAuth.instanceUrl,
     });
     let assignedPerm = [];
     if (userId) {

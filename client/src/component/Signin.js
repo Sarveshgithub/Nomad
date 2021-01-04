@@ -2,17 +2,11 @@
 // Security token (case-sensitive): As0Iba7gK2T9sqzdE7CZRh1rn
 // password : Code@123
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 function Signin(props) {
   const [user, setUser] = useState({
-    userName: "",
-    password: "",
-    secToken: "",
     orgType: "",
   });
-
   const [error, setError] = useState({});
-  const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onchange = (event) => {
     const { name, value } = event.target;
@@ -23,15 +17,6 @@ function Signin(props) {
   };
   const validation = () => {
     const tempErr = {};
-    if (!user.userName) {
-      tempErr["userName"] = "Required";
-    }
-    if (!user.password) {
-      tempErr["password"] = "Required";
-    }
-    if (!user.secToken) {
-      tempErr["secToken"] = "Required";
-    }
     if (!user.orgType) {
       tempErr["orgType"] = "Required";
     }
@@ -45,28 +30,7 @@ function Signin(props) {
   useEffect(() => {
     if (Object.keys(error).length === 0 && isSubmitting) {
       console.log("test::", user);
-      axios
-        .post("/api/user/login", user)
-        .then((response) => {
-          console.log(response);
-          props.history.push({
-            pathname: "/home",
-            data: response.data,
-          });
-          setIsSubmitting(false);
-        })
-        .catch((error) => {
-          console.log(error.response);
-          if (error) {
-            const {
-              response: {
-                data: { message },
-              },
-            } = error;
-            setServerError(message);
-          }
-          setIsSubmitting(false);
-        });
+      window.location = `http://localhost:5000/api/user/login?orgType=${user.orgType}`;
     }
     // eslint-disable-line react-hooks/exhaustive-deps
   }, [error, isSubmitting, user, props.history]);
@@ -76,40 +40,6 @@ function Signin(props) {
         <form className="login-form" onSubmit={submitHandler} noValidate>
           <div className="form-header">
             <h3>Login</h3>
-            {serverError && <p className="redColor">{serverError}</p>}
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-input"
-              name="userName"
-              value={user.userName}
-              onChange={onchange}
-              placeholder="UserName"
-            />
-            {error.userName && <p className="redColor">{error.userName}</p>}
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Password"
-              name="password"
-              value={user.password}
-              onChange={onchange}
-            />
-            {error.password && <p className="redColor">{error.password}</p>}
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Security Token"
-              name="secToken"
-              value={user.secToken}
-              onChange={onchange}
-            />
-            {error.secToken && <p className="redColor">{error.secToken}</p>}
           </div>
           <div className="form-group">
             <input

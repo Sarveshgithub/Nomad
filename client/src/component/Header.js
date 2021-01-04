@@ -1,6 +1,8 @@
 import React from "react";
 
-function Header() {
+function Header(props) {
+  const { user } = props;
+  console.log("Header user::", user);
   return (
     <header
       style={{
@@ -20,6 +22,17 @@ function Header() {
             Log Issue
           </a>
         </li>
+        {user && <li>Logged In : {user.display_name}</li>}
+        {user && (
+          <li>
+            <a
+              href="http://localhost:5000/api/user/logout"
+              rel="noreferrer noopener"
+            >
+              Log Out
+            </a>
+          </li>
+        )}
       </div>
     </header>
   );

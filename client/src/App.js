@@ -1,23 +1,27 @@
-import React from "react";
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Signin from "./component/Signin";
 import Header from "./component/Header";
 import Home from "./component/Home";
+import axios from "axios";
+
 function App() {
+  const [user, serUser] = useState(null);
+  useEffect(() => {
+    axios
+      .get("/api/user/whoami")
+      .then((response) => {
+        console.log("response:::", response);
+        serUser(response.data);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  }, []);
   return (
     <div>
-      <Header />
-      <main>
-        <BrowserRouter>
-          <Route path="/signin" component={Signin} />
-          <Route exact path="/home" component={Home} />
-          <Route path="*">
-            <Redirect to="/signin" />
-          </Route>
-        </BrowserRouter>
-      </main>
+      <Header user={user} />
+      <main>{user ? <Home /> : <Signin />}</main>
     </div>
   );
 }
-
 export default App;
