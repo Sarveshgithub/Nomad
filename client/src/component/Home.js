@@ -169,10 +169,10 @@ function Home(props) {
                   <input
                     type="radio"
                     name="permType"
-                    value="Permession"
+                    value="Permission"
                     onChange={onchange}
                   />
-                  {"Permession Set"}
+                  {"Permission Set"}
                 </label>
               </p>
               {error.typeError && <p className="redColor">{error.typeError}</p>}
@@ -202,26 +202,30 @@ function Home(props) {
               </label>
             )}
             {error.apiError && <p className="redColor">{error.apiError}</p>}
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Permission set Names
-              <textarea
-                type="text"
-                name="permName"
-                value={filters.permName}
-                onChange={onchange}
-                placeholder="Enter comma seprated permission name"
-              />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Profile Names
-              <textarea
-                type="text"
-                name="profileName"
-                value={filters.profileName}
-                onChange={onchange}
-                placeholder="Enter comma seprated profile name"
-              />
-            </label>
+            {filters.permType === "Permission" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                Permission set Names
+                <textarea
+                  type="text"
+                  name="permName"
+                  value={filters.permName}
+                  onChange={onchange}
+                  placeholder="Enter comma seprated permission name"
+                />
+              </label>
+            )}
+            {filters.permType === "Profile" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                Profile Names
+                <textarea
+                  type="text"
+                  name="profileName"
+                  value={filters.profileName}
+                  onChange={onchange}
+                  placeholder="Enter comma seprated profile name"
+                />
+              </label>
+            )}
             <label style={{ display: "flex", flexDirection: "column" }}>
               User Id
               <textarea
