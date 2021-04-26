@@ -115,7 +115,8 @@ router.post("/accounts", async (req, res) => {
     }
     let fieldQuery = fieldSOQL({ ...req.body, assignedPerm }),
       objectQuery = objectSOQL({ ...req.body, assignedPerm });
-
+    console.log("fieldQuery::", fieldQuery);
+    console.log("objectQuery::", objectQuery);
     const data = [];
     const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
     const objectData = objectQuery ? await conn.query(objectQuery) : "";
