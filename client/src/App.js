@@ -5,7 +5,7 @@ import Home from "./component/Home";
 import axios from "axios";
 
 function App() {
-  const [user, serUser] = useState(null);
+  const [user, serUser] = useState('test');
   useEffect(() => {
     axios
       .get("/api/user/whoami")

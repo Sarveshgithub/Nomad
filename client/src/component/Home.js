@@ -16,18 +16,22 @@ function Home(props) {
     userId: "",
     permName: "",
     profileName: "",
-    isProfile: true,
-    isPerm: false,
+    permType: "",
+    fslOLS: "",
   });
   const onchange = (event) => {
-    let { name, value, checked } = event.target;
+    console.log("event----", event.target);
+    const { name, value, checked } = event.target;
     if (checked !== undefined) {
-      value = checked;
+      //value = checked;
     }
     setFilters({
       ...filters,
       [name]: value,
     });
+
+    console.log("------------filters----------", filters);
+    //debugger;
   };
   const validation = () => {
     const tempErr = {};
@@ -126,22 +130,46 @@ function Home(props) {
               <u>Filters</u>
             </h3>
             <div>
+              Select permetion type
+              <p>
+                <label>
+                  <input
+                    type="radio"
+                    value="FLS"
+                    name="fslOLS"
+                    onChange={onchange}
+                  />
+                  {"FLS"}
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="OLS"
+                    name="fslOLS"
+                    onChange={onchange}
+                  />
+                  {"OLS"}
+                </label>
+              </p>
+              {error.typeError && <p className="redColor">{error.typeError}</p>}
+            </div>
+            <div>
               Select Options
               <p>
                 <label>
                   <input
-                    type="checkbox"
-                    name="isProfile"
-                    checked={filters.isProfile}
+                    type="radio"
+                    name="permType"
+                    value="Profile"
                     onChange={onchange}
                   />
                   {"Profile"}
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    name="isPerm"
-                    checked={filters.isPerm}
+                    type="radio"
+                    name="permType"
+                    value="Permession"
                     onChange={onchange}
                   />
                   {"Permession Set"}
@@ -149,26 +177,30 @@ function Home(props) {
               </p>
               {error.typeError && <p className="redColor">{error.typeError}</p>}
             </div>
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Object Api Names
-              <textarea
-                type="text"
-                name="objApi"
-                value={filters.objApi}
-                onChange={onchange}
-                placeholder="Account,Contact"
-              />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Field Api Names
-              <textarea
-                type="text"
-                name="fieldApi"
-                value={filters.fieldApi}
-                onChange={onchange}
-                placeholder="Contact.Name,Contact.Email"
-              />
-            </label>
+            {filters.fslOLS === "OLS" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                Object Api Names
+                <textarea
+                  type="text"
+                  name="objApi"
+                  value={filters.objApi}
+                  onChange={onchange}
+                  placeholder="Account,Contact"
+                />
+              </label>
+            )}
+            {filters.fslOLS === "FLS" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                Field Api Names
+                <textarea
+                  type="text"
+                  name="fieldApi"
+                  value={filters.fieldApi}
+                  onChange={onchange}
+                  placeholder="Contact.Name,Contact.Email"
+                />
+              </label>
+            )}
             {error.apiError && <p className="redColor">{error.apiError}</p>}
             <label style={{ display: "flex", flexDirection: "column" }}>
               Permission set Names

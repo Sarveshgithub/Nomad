@@ -52,7 +52,6 @@ function Signin(props) {
             <input
               type="radio"
               value="https://test.salesforce.com"
-              name="gender"
               name="orgType"
               onChange={onchange}
             />
