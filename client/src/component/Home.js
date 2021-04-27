@@ -11,8 +11,8 @@ function Home(props) {
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
-    objApi: "contact",
-    fieldApi: "contact.name,contact.email",
+    objApi: "",
+    fieldApi: "",
     userId: "",
     permName: "",
     profileName: "",
@@ -35,11 +35,17 @@ function Home(props) {
   };
   const validation = () => {
     const tempErr = {};
-    if (!filters.isProfile && !filters.isPerm) {
-      tempErr["typeError"] = "Atlest select one permession type";
+    if (!filters.permType) {
+      tempErr["permType"] = "Required";
     }
-    if (!filters.objApi && !filters.fieldApi) {
-      tempErr["apiError"] = "Atlest enter Object or Field Api Name";
+    if (!filters.fslOLS) {
+      tempErr["fslOLS"] = "Required";
+    }
+    if (!filters.fieldApi && filters.fslOLS === "FLS") {
+      tempErr["fieldApi"] = "Required";
+    }
+    if (!filters.objApi && filters.fslOLS === "OLS") {
+      tempErr["objApi"] = "Required";
     }
     return tempErr;
   };
@@ -123,14 +129,14 @@ function Home(props) {
         justifyContent: "space-around",
       }}
     >
-      <div style={{ width: "20%" }}>
+      <div style={{ width: "30%" }}>
         <form onSubmit={submitHandler} noValidate>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <h3>
               <u>Filters</u>
             </h3>
             <div>
-              Select permetion type
+              *Select field or object level permission
               <p>
                 <label>
                   <input
@@ -151,10 +157,10 @@ function Home(props) {
                   {"OLS"}
                 </label>
               </p>
-              {error.typeError && <p className="redColor">{error.typeError}</p>}
+              {error.fslOLS && <p className="redColor">{error.fslOLS}</p>}
             </div>
             <div>
-              Select Options
+              *Select options
               <p>
                 <label>
                   <input
@@ -175,11 +181,11 @@ function Home(props) {
                   {"Permission Set"}
                 </label>
               </p>
-              {error.typeError && <p className="redColor">{error.typeError}</p>}
+              {error.permType && <p className="redColor">{error.permType}</p>}
             </div>
             {filters.fslOLS === "OLS" && (
               <label style={{ display: "flex", flexDirection: "column" }}>
-                Object Api Names
+                *Enter object api names with comma seprated
                 <textarea
                   type="text"
                   name="objApi"
@@ -189,9 +195,10 @@ function Home(props) {
                 />
               </label>
             )}
+            {error.objApi && <p className="redColor">{error.objApi}</p>}
             {filters.fslOLS === "FLS" && (
               <label style={{ display: "flex", flexDirection: "column" }}>
-                Field Api Names
+                *Enter field api names with comma seprated
                 <textarea
                   type="text"
                   name="fieldApi"
@@ -201,10 +208,10 @@ function Home(props) {
                 />
               </label>
             )}
-            {error.apiError && <p className="redColor">{error.apiError}</p>}
+            {error.fieldApi && <p className="redColor">{error.fieldApi}</p>}
             {filters.permType === "Permission" && (
               <label style={{ display: "flex", flexDirection: "column" }}>
-                Permission set Names
+                Enter permission set names
                 <textarea
                   type="text"
                   name="permName"
@@ -216,7 +223,7 @@ function Home(props) {
             )}
             {filters.permType === "Profile" && (
               <label style={{ display: "flex", flexDirection: "column" }}>
-                Profile Names
+                Enter profile names
                 <textarea
                   type="text"
                   name="profileName"
