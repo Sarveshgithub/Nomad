@@ -15,7 +15,7 @@ function Header(props) {
       <div className="header-item">
         <li>
           <a
-            href="https://gitreports.com/issue/Sarveshgithub/Nomad"
+            href="https://github.com/Sarveshgithub/Nomad/issues"
             target="_blank"
             rel="noreferrer noopener"
           >
