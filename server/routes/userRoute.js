@@ -119,7 +119,7 @@ router.post("/fetchPermission", async (req, res) => {
         fslOLS === "FLS" ? fieldSOQL({ ...req.body, assignedPerm }) : null,
       objectQuery =
         fslOLS === "OLS" ? objectSOQL({ ...req.body, assignedPerm }) : null;
-    console.log("fslOLS:::", fslOLS);
+    console.log("fslOLS:::", fieldQuery);
     console.log("objectQuery:::", objectQuery);
     const data = [];
     const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
@@ -131,6 +131,7 @@ router.post("/fetchPermission", async (req, res) => {
     if (objectData.records) {
       data.push(...objectData.records);
     }
+    console.log('data::::::',data)
     if (data) {
       res.send(resData(data, req.body));
     } else {
