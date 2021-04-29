@@ -98,6 +98,7 @@ router.post("/fetchPermission", async (req, res) => {
   try {
     //Permission Profile FLS OLS
     const { userId, fslOLS } = req.body;
+    console.log("req.body::", req.body);
     const conn = new jsforce.Connection({
       accessToken: req.session.sfdcAuth.accessToken,
       instanceUrl: req.session.sfdcAuth.instanceUrl,
@@ -114,14 +115,15 @@ router.post("/fetchPermission", async (req, res) => {
         });
       }
     }
-    let fieldQuery = fieldSOQL({ ...req.body, assignedPerm }),
-      objectQuery = objectSOQL({ ...req.body, assignedPerm });
-
+    let fieldQuery =
+        fslOLS === "FLS" ? fieldSOQL({ ...req.body, assignedPerm }) : null,
+      objectQuery =
+        fslOLS === "OLS" ? objectSOQL({ ...req.body, assignedPerm }) : null;
+    console.log("fslOLS:::", fslOLS);
+    console.log("objectQuery:::", objectQuery);
     const data = [];
-    const fieldData =
-      fslOLS === "FLS" && fieldQuery ? await conn.query(fieldQuery) : "";
-    const objectData =
-      fslOLS === "OLS" && objectQuery ? await conn.query(objectQuery) : "";
+    const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
+    const objectData = objectQuery ? await conn.query(objectQuery) : "";
 
     if (fieldData.records) {
       data.push(...fieldData.records);
