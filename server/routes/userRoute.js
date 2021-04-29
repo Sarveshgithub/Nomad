@@ -94,9 +94,10 @@ router.get("/logout", function (request, response) {
     return response.redirect("/");
   });
 });
-router.post("/accounts", async (req, res) => {
+router.post("/fetchPermission", async (req, res) => {
   try {
-    const { accessToken, instanceUrl, userId } = req.body;
+    //Permission Profile FLS OLS
+    const { userId, fslOLS } = req.body;
     const conn = new jsforce.Connection({
       accessToken: req.session.sfdcAuth.accessToken,
       instanceUrl: req.session.sfdcAuth.instanceUrl,
@@ -117,8 +118,10 @@ router.post("/accounts", async (req, res) => {
       objectQuery = objectSOQL({ ...req.body, assignedPerm });
 
     const data = [];
-    const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
-    const objectData = objectQuery ? await conn.query(objectQuery) : "";
+    const fieldData =
+      fslOLS === "FLS" && fieldQuery ? await conn.query(fieldQuery) : "";
+    const objectData =
+      fslOLS === "OLS" && objectQuery ? await conn.query(objectQuery) : "";
 
     if (fieldData.records) {
       data.push(...fieldData.records);

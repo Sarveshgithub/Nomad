@@ -1,6 +1,3 @@
-// Username: sarvesh.kumar@sfdx.com
-// Security token (case-sensitive): As0Iba7gK2T9sqzdE7CZRh1rn
-// password : Code@123
 import React, { useState, useEffect } from "react";
 function Signin(props) {
   const [user, setUser] = useState({

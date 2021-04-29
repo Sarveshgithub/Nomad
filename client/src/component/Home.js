@@ -20,18 +20,11 @@ function Home(props) {
     fslOLS: "",
   });
   const onchange = (event) => {
-    console.log("event----", event.target);
-    const { name, value, checked } = event.target;
-    if (checked !== undefined) {
-      //value = checked;
-    }
+    const { name, value } = event.target;
     setFilters({
       ...filters,
       [name]: value,
     });
-
-    console.log("------------filters----------", filters);
-    //debugger;
   };
   const validation = () => {
     const tempErr = {};
@@ -67,15 +60,14 @@ function Home(props) {
       userId,
       permName,
       profileName,
-      isProfile,
-      isPerm,
+      permType,
+      fslOLS,
     } = filters;
-    objApi = objApi ? `(${addQuotes(objApi)})` : "";
-    fieldApi = fieldApi ? `(${addQuotes(fieldApi)})` : "";
-    permName = permName ? `(${addQuotes(permName)})` : "";
-    profileName = profileName ? `(${addQuotes(profileName)})` : "";
-    userId = userId ? addQuotes(userId) : "";
-    console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
+    objApi = objApi ? `(${addQuotes(objApi)})` : null;
+    fieldApi = fieldApi ? `(${addQuotes(fieldApi)})` : null;
+    permName = permName ? `(${addQuotes(permName)})` : null;
+    profileName = profileName ? `(${addQuotes(profileName)})` : null;
+    userId = userId ? addQuotes(userId) : null;
     const callback = (response) => {
       console.log("callback response,:::", response);
       const { data, status } = response;
@@ -99,15 +91,16 @@ function Home(props) {
       setLoading(false);
     };
     postCall(
-      "/api/user/accounts",
+      "/api/user/fetchPermission",
       {
         objApi,
         fieldApi,
         permName,
         profileName,
-        isProfile,
-        isPerm,
         userId,
+        fslOLS,
+        isProfile: permType === "Profile",
+        isPerm: permType === "Permission",
       },
       callback
     );
