@@ -11,19 +11,16 @@ function Home(props) {
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filters, setFilters] = useState({
-    objApi: "contact",
-    fieldApi: "contact.name,contact.email",
+    objApi: "",
+    fieldApi: "",
     userId: "",
     permName: "",
     profileName: "",
-    isProfile: true,
-    isPerm: false,
+    permType: "",
+    fslOLS: "",
   });
   const onchange = (event) => {
-    let { name, value, checked } = event.target;
-    if (checked !== undefined) {
-      value = checked;
-    }
+    const { name, value } = event.target;
     setFilters({
       ...filters,
       [name]: value,
@@ -31,11 +28,17 @@ function Home(props) {
   };
   const validation = () => {
     const tempErr = {};
-    if (!filters.isProfile && !filters.isPerm) {
-      tempErr["typeError"] = "Atlest select one permession type";
+    if (!filters.permType) {
+      tempErr["permType"] = "Required";
     }
-    if (!filters.objApi && !filters.fieldApi) {
-      tempErr["apiError"] = "Atlest enter Object or Field Api Name";
+    if (!filters.fslOLS) {
+      tempErr["fslOLS"] = "Required";
+    }
+    if (!filters.fieldApi && filters.fslOLS === "FLS") {
+      tempErr["fieldApi"] = "Required";
+    }
+    if (!filters.objApi && filters.fslOLS === "OLS") {
+      tempErr["objApi"] = "Required";
     }
     return tempErr;
   };
@@ -57,15 +60,14 @@ function Home(props) {
       userId,
       permName,
       profileName,
-      isProfile,
-      isPerm,
+      permType,
+      fslOLS,
     } = filters;
-    objApi = objApi ? `(${addQuotes(objApi)})` : "";
-    fieldApi = fieldApi ? `(${addQuotes(fieldApi)})` : "";
-    permName = permName ? `(${addQuotes(permName)})` : "";
-    profileName = profileName ? `(${addQuotes(profileName)})` : "";
-    userId = userId ? addQuotes(userId) : "";
-    console.log("objApi::", objApi, fieldApi, userId, permName, profileName);
+    objApi = objApi ? `(${addQuotes(objApi)})` : null;
+    fieldApi = fieldApi ? `(${addQuotes(fieldApi)})` : null;
+    permName = permName ? `(${addQuotes(permName)})` : null;
+    profileName = profileName ? `(${addQuotes(profileName)})` : null;
+    userId = userId ? addQuotes(userId) : null;
     const callback = (response) => {
       console.log("callback response,:::", response);
       const { data, status } = response;
@@ -89,15 +91,16 @@ function Home(props) {
       setLoading(false);
     };
     postCall(
-      "/api/user/accounts",
+      "/api/user/fetchPermission",
       {
         objApi,
         fieldApi,
         permName,
         profileName,
-        isProfile,
-        isPerm,
         userId,
+        fslOLS,
+        isProfile: permType === "Profile",
+        isPerm: permType === "Permission",
       },
       callback
     );
@@ -119,77 +122,110 @@ function Home(props) {
         justifyContent: "space-around",
       }}
     >
-      <div style={{ width: "20%" }}>
+      <div style={{ width: "30%" }}>
         <form onSubmit={submitHandler} noValidate>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <h3>
               <u>Filters</u>
             </h3>
             <div>
-              Select Options
+              *Select field or object level permission
               <p>
                 <label>
                   <input
-                    type="checkbox"
-                    name="isProfile"
-                    checked={filters.isProfile}
+                    type="radio"
+                    value="FLS"
+                    name="fslOLS"
+                    onChange={onchange}
+                  />
+                  {"FLS"}
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    value="OLS"
+                    name="fslOLS"
+                    onChange={onchange}
+                  />
+                  {"OLS"}
+                </label>
+              </p>
+              {error.fslOLS && <p className="redColor">{error.fslOLS}</p>}
+            </div>
+            <div>
+              *Select options
+              <p>
+                <label>
+                  <input
+                    type="radio"
+                    name="permType"
+                    value="Profile"
                     onChange={onchange}
                   />
                   {"Profile"}
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    name="isPerm"
-                    checked={filters.isPerm}
+                    type="radio"
+                    name="permType"
+                    value="Permission"
                     onChange={onchange}
                   />
-                  {"Permession Set"}
+                  {"Permission Set"}
                 </label>
               </p>
-              {error.typeError && <p className="redColor">{error.typeError}</p>}
+              {error.permType && <p className="redColor">{error.permType}</p>}
             </div>
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Object Api Names
-              <textarea
-                type="text"
-                name="objApi"
-                value={filters.objApi}
-                onChange={onchange}
-                placeholder="Account,Contact"
-              />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Field Api Names
-              <textarea
-                type="text"
-                name="fieldApi"
-                value={filters.fieldApi}
-                onChange={onchange}
-                placeholder="Contact.Name,Contact.Email"
-              />
-            </label>
-            {error.apiError && <p className="redColor">{error.apiError}</p>}
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Permission set Names
-              <textarea
-                type="text"
-                name="permName"
-                value={filters.permName}
-                onChange={onchange}
-                placeholder="Enter comma seprated permission name"
-              />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column" }}>
-              Profile Names
-              <textarea
-                type="text"
-                name="profileName"
-                value={filters.profileName}
-                onChange={onchange}
-                placeholder="Enter comma seprated profile name"
-              />
-            </label>
+            {filters.fslOLS === "OLS" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                *Enter object api names with comma seprated
+                <textarea
+                  type="text"
+                  name="objApi"
+                  value={filters.objApi}
+                  onChange={onchange}
+                  placeholder="Account,Contact"
+                />
+              </label>
+            )}
+            {error.objApi && <p className="redColor">{error.objApi}</p>}
+            {filters.fslOLS === "FLS" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                *Enter field api names with comma seprated
+                <textarea
+                  type="text"
+                  name="fieldApi"
+                  value={filters.fieldApi}
+                  onChange={onchange}
+                  placeholder="Contact.Name,Contact.Email"
+                />
+              </label>
+            )}
+            {error.fieldApi && <p className="redColor">{error.fieldApi}</p>}
+            {filters.permType === "Permission" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                Enter permission set names
+                <textarea
+                  type="text"
+                  name="permName"
+                  value={filters.permName}
+                  onChange={onchange}
+                  placeholder="Enter comma seprated permission name"
+                />
+              </label>
+            )}
+            {filters.permType === "Profile" && (
+              <label style={{ display: "flex", flexDirection: "column" }}>
+                Enter profile names
+                <textarea
+                  type="text"
+                  name="profileName"
+                  value={filters.profileName}
+                  onChange={onchange}
+                  placeholder="Enter comma seprated profile name"
+                />
+              </label>
+            )}
             <label style={{ display: "flex", flexDirection: "column" }}>
               User Id
               <textarea
