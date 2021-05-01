@@ -37,7 +37,7 @@ function Home(props) {
     if (!filters.fieldApi && filters.fslOLS === "FLS") {
       tempErr["fieldApi"] = "Required";
     }
-    if (!filters.objApi && filters.fslOLS === "OLS") {
+    if (!filters.objApi) {
       tempErr["objApi"] = "Required";
     }
     return tempErr;
@@ -176,18 +176,16 @@ function Home(props) {
               </p>
               {error.permType && <p className="redColor">{error.permType}</p>}
             </div>
-            {filters.fslOLS === "OLS" && (
-              <label style={{ display: "flex", flexDirection: "column" }}>
-                *Enter object api names with comma seprated
-                <textarea
-                  type="text"
-                  name="objApi"
-                  value={filters.objApi}
-                  onChange={onchange}
-                  placeholder="Account,Contact"
-                />
-              </label>
-            )}
+            <label style={{ display: "flex", flexDirection: "column" }}>
+              *Enter object api names with comma seprated
+              <textarea
+                type="text"
+                name="objApi"
+                value={filters.objApi}
+                onChange={onchange}
+                placeholder="Account,Contact"
+              />
+            </label>
             {error.objApi && <p className="redColor">{error.objApi}</p>}
             {filters.fslOLS === "FLS" && (
               <label style={{ display: "flex", flexDirection: "column" }}>
