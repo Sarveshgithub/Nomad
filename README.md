@@ -1,11 +1,11 @@
 # [Nomad](https://nomad24.herokuapp.com/)
 ## About
-Nomad is a open source application which help to retrive Salesforce standards and custom objects and fields permession based on profiels and permession sets, Faciliate with sandbox and production ready.
+Nomad is an open-source application that helps to retrieve Salesforce standards and custom objects and fields permission based on profiles and permission sets, Facilitate with sandbox, and production-ready.
 
 ## Feature 
 - Easy to login Sandbox or Production via outh2.0
-- Retrive custom and standard FLS and OLS permession
-- Easy to navigate permession set and profile in Org from Nomad, just need to click on permession name
+- Retrieve custom and standard FLS and OLS permission
+- Easy to navigate permission set and profile in Org from Nomad, just need to click on permission name
 > Note:
  [Special Properties for Field Permissions](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_fieldpermissions.htm).
  Field Permissions won't show system fields that Salesforce sets access, you will get No Records. ```i.e. Name, Id, CreatedById,CreatedDate```
