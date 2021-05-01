@@ -75,9 +75,11 @@ function Home(props) {
         const { permSet, profile } = data;
         if (permSet) {
           setPerms(permSet);
+          setServerError(null);
         }
         if (profile) {
           setProfile(profile);
+          setServerError(null);
         }
         if (permSet.length === 0 && profile.length === 0) {
           setServerError("No records found");
@@ -254,7 +256,7 @@ function Home(props) {
           </div>
         )}
         {loading && <Loader />}
-        <div style={{ width: "50%" }}>
+        <div>
           {profile.length > 0 && (
             <Table
               title={"Profiles"}
@@ -270,7 +272,7 @@ function Home(props) {
             />
           )}
         </div>
-        <div style={{ width: "50%" }}>
+        <div>
           {permSet.length > 0 && (
             <Table
               title={"Permession Sets"}
