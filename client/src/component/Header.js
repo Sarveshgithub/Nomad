@@ -15,6 +15,15 @@ function Header(props) {
       <div className="header-item">
         <li>
           <a
+            href="https://github.com/Sarveshgithub/Nomad#readme"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            About
+          </a>
+        </li>
+        <li>
+          <a
             href="https://gitreports.com/issue/Sarveshgithub/Nomad"
             target="_blank"
             rel="noreferrer noopener"
