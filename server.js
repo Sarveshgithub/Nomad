@@ -1,6 +1,5 @@
 const express = require("express");
 const userRoute = require("./server/routes/userRoute");
-const bodyParser = require("body-parser");
 const session = require("express-session");
 const path = require("path");
 const app = express();
@@ -14,7 +13,7 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use("/api/user", userRoute);
 if (process.env.NODE_ENV === "production") {
