@@ -7,7 +7,7 @@ const config = require("./server/config");
 const port = process.env.PORT || 5000;
 app.use(
   session({
-    secret: "test123",
+    secret: config.SECRET,
     cookie: { secure: config.HTTP == "true" },
     resave: false,
     saveUninitialized: false,
