@@ -20,7 +20,7 @@ function App() {
   return (
     <div>
       <Header user={user} />
-      <main>{user ? <Home /> : <Signin />}</main>
+      <main>{user ? <Home instanceUrl = {user.instanceUrl} /> : <Signin />}</main>
     </div>
   );
 }
