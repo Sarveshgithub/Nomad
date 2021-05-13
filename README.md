@@ -4,7 +4,7 @@ Nomad is an open-source application that helps to retrieve Salesforce standards 
 
 Visit -  [https://nomad24.herokuapp.com/](https://nomad24.herokuapp.com/)
 
-[](https://github.com/Sarveshgithub/Nomad/blob/outh/client/src/asset/img/Nomad.gif)
+![](https://github.com/Sarveshgithub/Nomad/blob/outh/client/src/asset/img/Nomad.gif)
 
 ## Feature 
 - Easy to login Sandbox or Production via outh2.0
