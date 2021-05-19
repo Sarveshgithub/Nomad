@@ -2,7 +2,6 @@ import React from "react";
 
 function Header(props) {
   const { user } = props;
-  console.log("Header user::", user);
   return (
     <header
       style={{

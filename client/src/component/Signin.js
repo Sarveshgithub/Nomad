@@ -26,7 +26,6 @@ function Signin(props) {
   };
   useEffect(() => {
     if (Object.keys(error).length === 0 && isSubmitting) {
-      console.log("test::", user);
       window.location = `/api/user/login?orgType=${user.orgType}`;
     }
     // eslint-disable-line react-hooks/exhaustive-deps

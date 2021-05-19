@@ -69,7 +69,6 @@ function Home(props) {
     profileName = profileName ? `(${addQuotes(profileName)})` : null;
     userId = userId ? addQuotes(userId) : null;
     const callback = (response) => {
-      console.log("callback response,:::", response);
       const { data, status } = response;
       if (status === 200) {
         const { permSet, profile } = data;

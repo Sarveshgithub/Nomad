@@ -10,7 +10,6 @@ function App() {
     axios
       .get("/api/user/whoami")
       .then((response) => {
-        console.log("response:::", response);
         serUser(response.data);
       })
       .catch((error) => {
