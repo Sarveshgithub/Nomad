@@ -56,7 +56,6 @@ router.get("/auth", function (request, response) {
   });
   conn.authorize(request.query.code, function (error, userInfo) {
     if (error) {
-      console.log("Salesforce authorization error: " + JSON.stringify(error));
       response.status(500).json(error);
       return;
     }
@@ -221,7 +220,6 @@ const resData = (response, params) => {
       ? isProfile && profile.push(element)
       : isPerm && permSet.push(element);
   });
-  console.log(data.length);
   return { profile, permSet };
 };
 

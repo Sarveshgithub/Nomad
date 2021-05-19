@@ -7,7 +7,6 @@ const postCall = (endPoint, body, callback) => {
       callback({ status, data });
     })
     .catch((error) => {
-      console.log(error.response);
       if (error) {
         const {
           response: { data, status },
