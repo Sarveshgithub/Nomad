@@ -10,7 +10,6 @@ function App() {
     axios
       .get("/api/user/whoami")
       .then((response) => {
-        console.log("response:::", response);
         serUser(response.data);
       })
       .catch((error) => {
@@ -20,7 +19,7 @@ function App() {
   return (
     <div>
       <Header user={user} />
-      <main>{user ? <Home /> : <Signin />}</main>
+      <main>{user ? <Home instanceUrl = {user.instanceUrl} /> : <Signin />}</main>
     </div>
   );
 }

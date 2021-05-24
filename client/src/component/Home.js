@@ -3,7 +3,7 @@ import { postCall } from "./util";
 import Table from "./Table";
 import Loader from "./Loader";
 function Home(props) {
-  const instanceUrl = "www.google.com";
+  const instanceUrl = props.instanceUrl;
   const [permSet, setPerms] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ function Home(props) {
     if (!filters.fieldApi && filters.fslOLS === "FLS") {
       tempErr["fieldApi"] = "Required";
     }
-    if (!filters.objApi && filters.fslOLS === "OLS") {
+    if (!filters.objApi) {
       tempErr["objApi"] = "Required";
     }
     return tempErr;
@@ -69,15 +69,16 @@ function Home(props) {
     profileName = profileName ? `(${addQuotes(profileName)})` : null;
     userId = userId ? addQuotes(userId) : null;
     const callback = (response) => {
-      console.log("callback response,:::", response);
       const { data, status } = response;
       if (status === 200) {
         const { permSet, profile } = data;
         if (permSet) {
           setPerms(permSet);
+          setServerError(null);
         }
         if (profile) {
           setProfile(profile);
+          setServerError(null);
         }
         if (permSet.length === 0 && profile.length === 0) {
           setServerError("No records found");
@@ -91,7 +92,7 @@ function Home(props) {
       setLoading(false);
     };
     postCall(
-      "/api/user/fetchPermission",
+      "/api/permission/fetchPermission",
       {
         objApi,
         fieldApi,
@@ -176,18 +177,16 @@ function Home(props) {
               </p>
               {error.permType && <p className="redColor">{error.permType}</p>}
             </div>
-            {filters.fslOLS === "OLS" && (
-              <label style={{ display: "flex", flexDirection: "column" }}>
-                *Enter object api names with comma seprated
-                <textarea
-                  type="text"
-                  name="objApi"
-                  value={filters.objApi}
-                  onChange={onchange}
-                  placeholder="Account,Contact"
-                />
-              </label>
-            )}
+            <label style={{ display: "flex", flexDirection: "column" }}>
+              *Enter object api names with comma seprated
+              <textarea
+                type="text"
+                name="objApi"
+                value={filters.objApi}
+                onChange={onchange}
+                placeholder="Account,Contact"
+              />
+            </label>
             {error.objApi && <p className="redColor">{error.objApi}</p>}
             {filters.fslOLS === "FLS" && (
               <label style={{ display: "flex", flexDirection: "column" }}>
@@ -256,7 +255,7 @@ function Home(props) {
           </div>
         )}
         {loading && <Loader />}
-        <div style={{ width: "50%" }}>
+        <div>
           {profile.length > 0 && (
             <Table
               title={"Profiles"}
@@ -272,7 +271,7 @@ function Home(props) {
             />
           )}
         </div>
-        <div style={{ width: "50%" }}>
+        <div>
           {permSet.length > 0 && (
             <Table
               title={"Permession Sets"}

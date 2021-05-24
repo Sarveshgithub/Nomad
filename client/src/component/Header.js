@@ -2,7 +2,6 @@ import React from "react";
 
 function Header(props) {
   const { user } = props;
-  console.log("Header user::", user);
   return (
     <header
       style={{
@@ -13,6 +12,15 @@ function Header(props) {
         <h1>Nomad24</h1>
       </div>
       <div className="header-item">
+        <li>
+          <a
+            href="https://github.com/Sarveshgithub/Nomad#readme"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            About
+          </a>
+        </li>
         <li>
           <a
             href="https://github.com/Sarveshgithub/Nomad/issues"

@@ -3,8 +3,8 @@ const jsforce = require("jsforce");
 const router = express.Router();
 const config = require("../config");
 let oauth2;
+
 function getSession(request, response) {
-  console.log("trst::: session:::", request.session);
   const session = request.session;
   if (!session.sfdcAuth) {
     response.status(401).send("No active session");
@@ -12,6 +12,7 @@ function getSession(request, response) {
   }
   return session;
 }
+
 function resumeSalesforceConnection(session) {
   return new jsforce.Connection({
     instanceUrl: session.sfdcAuth.instanceUrl,
@@ -19,6 +20,7 @@ function resumeSalesforceConnection(session) {
     loginUrl: session.sfdcAuth.loginUrl,
   });
 }
+
 router.get("/whoami", function (request, response) {
   const session = getSession(request, response);
   if (session == null) {
@@ -30,9 +32,8 @@ router.get("/whoami", function (request, response) {
     response.send({ ...res, instanceUrl: session.sfdcAuth.instanceUrl });
   });
 });
+
 router.get("/login", function (req, res) {
-  console.log("req:::", req.query.orgType);
-  console.log("oauth2:::", oauth2);
   oauth2 = new jsforce.OAuth2({
     loginUrl: req.query.orgType,
     clientId: config.CLIENT_ID,
@@ -41,6 +42,7 @@ router.get("/login", function (req, res) {
   });
   res.redirect(oauth2.getAuthorizationUrl({ scope: "api id web" }));
 });
+
 router.get("/auth", function (request, response) {
   if (!request.query.code) {
     response
@@ -54,26 +56,20 @@ router.get("/auth", function (request, response) {
   });
   conn.authorize(request.query.code, function (error, userInfo) {
     if (error) {
-      console.log("Salesforce authorization error: " + JSON.stringify(error));
       response.status(500).json(error);
       return;
     }
-    console.log(conn.accessToken);
-    console.log(conn.refreshToken);
-    console.log(conn.instanceUrl);
-    console.log("User ID: " + userInfo.id);
-    console.log("Org ID: " + userInfo.organizationId);
     // Store oauth session data in server (never expose it directly to client)
     request.session.sfdcAuth = {
       loginUrl: oauth2.loginUrl,
       instanceUrl: conn.instanceUrl,
       accessToken: conn.accessToken,
     };
-    // console.log("session:::", request);
     // Redirect to app main page
     return response.redirect("/");
   });
 });
+
 router.get("/logout", function (request, response) {
   const session = getSession(request, response);
   if (session == null) return;
@@ -94,11 +90,11 @@ router.get("/logout", function (request, response) {
     return response.redirect("/");
   });
 });
+
 router.post("/fetchPermission", async (req, res) => {
   try {
     //Permission Profile FLS OLS
     const { userId, fslOLS } = req.body;
-    console.log("req.body::", req.body);
     const conn = new jsforce.Connection({
       accessToken: req.session.sfdcAuth.accessToken,
       instanceUrl: req.session.sfdcAuth.instanceUrl,
@@ -119,19 +115,15 @@ router.post("/fetchPermission", async (req, res) => {
         fslOLS === "FLS" ? fieldSOQL({ ...req.body, assignedPerm }) : null,
       objectQuery =
         fslOLS === "OLS" ? objectSOQL({ ...req.body, assignedPerm }) : null;
-    console.log("fslOLS:::", fieldQuery);
-    console.log("objectQuery:::", objectQuery);
     const data = [];
     const fieldData = fieldQuery ? await conn.query(fieldQuery) : "";
     const objectData = objectQuery ? await conn.query(objectQuery) : "";
-
     if (fieldData.records) {
       data.push(...fieldData.records);
     }
     if (objectData.records) {
       data.push(...objectData.records);
     }
-    console.log('data::::::',data)
     if (data) {
       res.send(resData(data, req.body));
     } else {
@@ -141,6 +133,7 @@ router.post("/fetchPermission", async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
 //Helper functions
 const fieldSOQL = (req) => {
   const andCondition = [],
@@ -169,6 +162,7 @@ const fieldSOQL = (req) => {
   query += orCondition.length > 0 ? ` AND (${orCondition.join(" OR ")})` : "";
   return query;
 };
+
 const objectSOQL = (req) => {
   const andCondition = [],
     orCondition = [];
@@ -193,6 +187,7 @@ const objectSOQL = (req) => {
   query += orCondition.length > 0 ? ` AND (${orCondition.join(" OR ")})` : "";
   return query;
 };
+
 const resData = (response, params) => {
   const { isProfile, isPerm } = params;
   const profile = [],
@@ -225,7 +220,7 @@ const resData = (response, params) => {
       ? isProfile && profile.push(element)
       : isPerm && permSet.push(element);
   });
-  console.log(data.length);
   return { profile, permSet };
 };
+
 module.exports = router;
