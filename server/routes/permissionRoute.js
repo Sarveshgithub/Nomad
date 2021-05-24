@@ -3,7 +3,7 @@ const jsforce = require("jsforce");
 const helper = require("../helper");
 const router = express.Router();
 
-router.post("/fetchPermission", async (req, res) => {
+router.post("/fetchPermission",(req, res) => {
   try {
     const { userId } = req.body;
     const assignedPerm = [];

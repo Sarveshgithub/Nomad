@@ -1,7 +1,7 @@
 const jsforce = require("jsforce");
-const constant = require("../constant");
+const constant = require("./constant");
 
-const doSOQL = (req, soql) => {
+const doSOQL = async (req, soql) => {
   const conn = new jsforce.Connection({
     accessToken: req.session.sfdcAuth.accessToken,
     instanceUrl: req.session.sfdcAuth.instanceUrl,
