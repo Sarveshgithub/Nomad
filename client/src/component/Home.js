@@ -92,7 +92,7 @@ function Home(props) {
       setLoading(false);
     };
     postCall(
-      "/api/user/fetchPermission",
+      "/api/permission/fetchPermission",
       {
         objApi,
         fieldApi,
